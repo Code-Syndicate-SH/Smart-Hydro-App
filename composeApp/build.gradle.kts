@@ -8,6 +8,9 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.2.0"
+    id("de.jensklingenberg.ktorfit") version "2.5.2"
+    id("com.google.devtools.ksp") version "2.2.0-2.0.2"
 }
 
 kotlin {
@@ -17,7 +20,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -28,16 +31,32 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     jvm("desktop")
-    
+
     sourceSets {
         val desktopMain by getting
-        
+        val iosX64Main by getting
+        val iosArm64Main by getting
+        val iosSimulatorArm64Main by getting
+        val ktorfitVersion = "2.5.1"
+        val ktorVersion = "3.2.0"
+        val koinVersion = "4.1.0"
+        val koinAnnotaionsVersion = "2.1.0"
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation("io.ktor:ktor-client-android:$ktorVersion")
         }
+        val iosMain by creating {
+            iosX64Main.dependsOn(this)
+            iosArm64Main.dependsOn(this)
+            iosSimulatorArm64Main.dependsOn(this)
+        }
+        iosMain.dependencies {
+            implementation("io.ktor:ktor-client-darwin:$ktorVersion")
+        }
+
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -47,6 +66,26 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            // kotlin serialization
+            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+
+            // coroutines for async
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+
+            // ktorfit( for using a retrofit like system), api requests
+            implementation("de.jensklingenberg.ktorfit:ktorfit-lib:$ktorfitVersion")
+
+            // below is for coil3 image loading
+            implementation("io.coil-kt.coil3:coil-compose:3.2.0")
+            implementation("io.coil-kt.coil3:coil-network-ktor3:$ktorVersion")
+
+            // dependency injection
+            implementation("io.insert-koin:koin-core:$koinVersion")
+            api("io.insert-koin:koin-annotations:$koinAnnotaionsVersion")
+            //life cycle
+            implementation("io.insert-koin:koin-compose:$koinVersion")
+            implementation("io.insert-koin:koin-compose-viewmodel:$koinVersion")
+            implementation("io.insert-koin:koin-compose-viewmodel-navigation:$koinVersion")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -54,6 +93,7 @@ kotlin {
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
+            implementation("io.ktor:ktor-client-java:$ktorVersion")
         }
     }
 }
@@ -72,6 +112,7 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "DebugProbesKt.bin"
         }
     }
     buildTypes {
