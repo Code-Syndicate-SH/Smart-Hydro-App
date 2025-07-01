@@ -2,10 +2,10 @@ name: "CodeQL Analysis"
 
 on:
   push:
-    branches: [ "feature/**" ]
+    branches: [ "feature/**","task/**" ]
   pull_request:
     branches: [ "main" ]
-
+    
 jobs:
   codeql-analysis:
     name: CodeQL for Kotlin Multiplatform
