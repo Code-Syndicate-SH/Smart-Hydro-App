@@ -1,4 +1,4 @@
-name: Build KMP App on Main Branch
+name: Build Compose Android App on Main Branch
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-main:
-    name: Build Full App
+    name: Build Compose App for Release
     runs-on: ubuntu-latest
 
     steps:
@@ -22,11 +22,5 @@ jobs:
       - name: Grant permission to Gradle
         run: chmod +x ./gradlew
 
-      - name: Build Shared Module
-        run: ./gradlew :shared:build
-
-      - name: Test Shared Module
-        run: ./gradlew :shared:test
-
-      - name: Build Compose Android App (Release)
+      - name: Build Compose App (Release)
         run: ./gradlew :androidApp:assembleRelease
