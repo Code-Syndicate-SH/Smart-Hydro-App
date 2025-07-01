@@ -50,7 +50,7 @@ kotlin {
         nativeMain.dependencies {
             implementation("io.ktor:ktor-client-darwin:$ktorVersion")
         }
-
+//
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
