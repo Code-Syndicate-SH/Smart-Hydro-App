@@ -40,7 +40,7 @@ kotlin {
         val ktorfitVersion = "2.5.1"
         val ktorVersion = "3.2.0"
         val koinVersion = "4.1.0"
-        val koinAnnotaionsVersion = "2.0.2"
+        val koinAnnotaionsVersion = "2.1.0"
         val multidexVersion = "2.0.1"
 
         androidMain.dependencies {
