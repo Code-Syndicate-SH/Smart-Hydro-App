@@ -10,7 +10,7 @@ plugins {
     alias(libs.plugins.composeHotReload)
     id("org.jetbrains.kotlin.plugin.serialization") version "2.2.0"
     id("de.jensklingenberg.ktorfit") version "2.5.2"
-    id("com.google.devtools.ksp") version "2.2.0-2.0.2"
+    id("com.google.devtools.ksp") version "2.0.21-1.0.28"
 }
 
 kotlin {
@@ -41,16 +41,20 @@ kotlin {
         val ktorVersion = "3.2.0"
         val koinVersion = "4.1.0"
         val koinAnnotaionsVersion = "2.1.0"
+        val multidexVersion = "2.0.1"
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation("io.ktor:ktor-client-android:$ktorVersion")
+
+            implementation("androidx.multidex:multidex:$multidexVersion")
         }
 
         nativeMain.dependencies {
             implementation("io.ktor:ktor-client-darwin:$ktorVersion")
         }
-//
+
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -102,6 +106,7 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+        multiDexEnabled = true
     }
     packaging {
         resources {
