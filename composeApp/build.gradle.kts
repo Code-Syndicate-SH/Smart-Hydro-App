@@ -10,7 +10,7 @@ plugins {
     alias(libs.plugins.composeHotReload)
     id("org.jetbrains.kotlin.plugin.serialization") version "2.2.0"
     id("de.jensklingenberg.ktorfit") version "2.5.2"
-    id("com.google.devtools.ksp") version "2.0.21-1.0.28"
+    id("com.google.devtools.ksp") version "2.2.0-2.0.2"
 }
 
 kotlin {
@@ -40,7 +40,7 @@ kotlin {
         val ktorfitVersion = "2.5.1"
         val ktorVersion = "3.2.0"
         val koinVersion = "4.1.0"
-        val koinAnnotaionsVersion = "2.1.0"
+        val koinAnnotaionsVersion = "2.0.2"
         val multidexVersion = "2.0.1"
 
         androidMain.dependencies {
