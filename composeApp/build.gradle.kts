@@ -36,9 +36,7 @@ kotlin {
 
     sourceSets {
         val desktopMain by getting
-        val iosX64Main by getting
-        val iosArm64Main by getting
-        val iosSimulatorArm64Main by getting
+
         val ktorfitVersion = "2.5.1"
         val ktorVersion = "3.2.0"
         val koinVersion = "4.1.0"
@@ -48,12 +46,8 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation("io.ktor:ktor-client-android:$ktorVersion")
         }
-        val iosMain by creating {
-            iosX64Main.dependsOn(this)
-            iosArm64Main.dependsOn(this)
-            iosSimulatorArm64Main.dependsOn(this)
-        }
-        iosMain.dependencies {
+
+        nativeMain.dependencies {
             implementation("io.ktor:ktor-client-darwin:$ktorVersion")
         }
 
@@ -125,7 +119,9 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 }
-
+ksp {
+    arg("KOIN_USE_COMPOSE_VIEWMODEL","true")
+}
 dependencies {
     debugImplementation(compose.uiTooling)
 }
