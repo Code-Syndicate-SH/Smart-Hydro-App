@@ -1,4 +1,4 @@
-name: Build Compose Android App on Feature Branch
+name: Build Kotlin Multiplatform Feature Branch
 
 on:
   push:
@@ -7,8 +7,8 @@ on:
     branches: [main]
 
 jobs:
-  build-compose:
-    name: Build Compose Android App
+  build-common:
+    name: Build and Test commonMain
     runs-on: ubuntu-latest
 
     steps:
@@ -23,8 +23,8 @@ jobs:
       - name: Grant permission to Gradle
         run: chmod +x ./gradlew
 
-      - name: Build Compose Android App
-        run: ./gradlew :androidApp:assembleDebug
+      - name: Build KMP Modules (with Compose)
+        run: ./gradlew build
 
-      - name: Run Unit Tests
-        run: ./gradlew :androidApp:testDebug
+      - name: Run Unit Tests (commonTest)
+        run: ./gradlew allTests
