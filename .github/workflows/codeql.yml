@@ -2,10 +2,10 @@ name: "CodeQL Analysis"
 
 on:
   push:
-    branches: [ "feature/**" ]
+    branches: [ "feature/**","task/**" ]
   pull_request:
     branches: [ "main" ]
-
+    
 jobs:
   codeql-analysis:
     name: CodeQL for Kotlin Multiplatform
@@ -32,7 +32,7 @@ jobs:
           languages: java
 
       - name: Build Shared Module
-        run: ./gradlew :shared:build
+        run: ./gradlew :composeApp:build
 
       - name: Run Shared Unit Tests
         run: ./gradlew :shared:test
