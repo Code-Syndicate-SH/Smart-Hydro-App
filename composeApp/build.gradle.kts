@@ -2,6 +2,7 @@ import com.google.devtools.ksp.gradle.KspAATask
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
@@ -19,6 +20,10 @@ plugins {
     id("de.jensklingenberg.ktorfit") version "2.5.2"
     id("com.google.devtools.ksp") version "2.2.0-2.0.2"*/
 
+}
+configurations.all {
+    // drop any ktor-client-core-jvm before it ever goes into an Android dex jar
+    exclude(group = "io.ktor", module = "ktor-client-core-jvm")
 }
 tasks.withType(KspAATask::class.java).configureEach {
     dependsOn("kspCommonMainKotlinMetadata")
@@ -50,6 +55,7 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.android)
+
            /*implementation("io.ktor:ktor-client-android:$ktorVersion")
              implementation(libs.androidx.)
             implementation("androidx.multidex:multidex:$multidexVersion")*/
