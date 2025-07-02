@@ -169,16 +169,7 @@ dependencies {
     add("kspIosArm64", libs.koin.ksp.compiler)
     add("kspIosSimulatorArm64", libs.koin.ksp.compiler)
 }
-tasks.withType<KspTask>().configureEach { // Or a more specific KspTask type if needed
-    if (name.startsWith("ksp") && name.contains("Android", ignoreCase = true)) {
-        // This targets tasks like kspDebugKotlinAndroid, kspReleaseKotlinAndroid
-        if (name != "kspCommonMainKotlinMetadata" && !name.endsWith("Metadata")) {
-            logger.info("Configuring $name to depend on kspCommonMainKotlinMetadata")
-            dependsOn("kspCommonMainKotlinMetadata")
-        }
-    }
 
-}
 
 compose.desktop {
     application {
