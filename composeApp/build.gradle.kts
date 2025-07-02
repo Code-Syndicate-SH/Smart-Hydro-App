@@ -102,9 +102,7 @@ kotlin {
             implementation("io.insert-koin:koin-compose-viewmodel:$koinVersion")
             implementation("io.insert-koin:koin-compose-viewmodel-navigation:$koinVersion") */
         }
-        sourceSets.named("commonMain").configure {
-            kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
-        }
+
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
@@ -115,6 +113,9 @@ kotlin {
 
         //    implementation("io.ktor:ktor-client-java:$ktorVersion")
 
+        }
+        sourceSets.named("commonMain").configure {
+            kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
         }
     }
 }
@@ -160,7 +161,7 @@ dependencies {
     add("kspIosSimulatorArm64", libs.koin.ksp.compiler)
 }
 project.tasks.withType(KotlinCompilationTask::class.java).configureEach {
-    if (name != "kspCommonMainKotlinMetadata") {
+    if(name != "kspCommonMainKotlinMetadata") {
         dependsOn("kspCommonMainKotlinMetadata")
     }
 }
