@@ -1,4 +1,3 @@
-
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -16,9 +15,9 @@ plugins {
     alias(libs.plugins.ktorfit)
     alias(libs.plugins.ksp)
 
- /*   id("org.jetbrains.kotlin.plugin.serialization") version "2.2.0"
-    id("de.jensklingenberg.ktorfit") version "2.5.2"
-    id("com.google.devtools.ksp") version "2.2.0-2.0.2"*/
+    /*   id("org.jetbrains.kotlin.plugin.serialization") version "2.2.0"
+       id("de.jensklingenberg.ktorfit") version "2.5.2"
+       id("com.google.devtools.ksp") version "2.2.0-2.0.2"*/
 
 }
 configurations.all {
@@ -54,13 +53,13 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.android)
 
-           /*implementation("io.ktor:ktor-client-android:$ktorVersion")
-             implementation(libs.androidx.)
-            implementation("androidx.multidex:multidex:$multidexVersion")*/
+            /*implementation("io.ktor:ktor-client-android:$ktorVersion")
+              implementation(libs.androidx.)
+             implementation("androidx.multidex:multidex:$multidexVersion")*/
         }
 
         nativeMain.dependencies {
-        /*    implementation("io.ktor:ktor-client-darwin:$ktorVersion")*/
+            /*    implementation("io.ktor:ktor-client-darwin:$ktorVersion")*/
             implementation(libs.ktor.client.darwin)
         }
 
@@ -89,26 +88,26 @@ kotlin {
             implementation(libs.ktorfit)
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
-        /*    // kotlin serialization
-            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+            /*    // kotlin serialization
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
 
-            // coroutines for async
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+                // coroutines for async
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
 
-            // ktorfit( for using a retrofit like system), api requests
-            implementation("de.jensklingenberg.ktorfit:ktorfit-lib:$ktorfitVersion")
+                // ktorfit( for using a retrofit like system), api requests
+                implementation("de.jensklingenberg.ktorfit:ktorfit-lib:$ktorfitVersion")
 
-            // below is for coil3 image loading
-            implementation("io.coil-kt.coil3:coil-compose:3.2.0")
-            implementation("io.coil-kt.coil3:coil-network-ktor3:$ktorVersion")
+                // below is for coil3 image loading
+                implementation("io.coil-kt.coil3:coil-compose:3.2.0")
+                implementation("io.coil-kt.coil3:coil-network-ktor3:$ktorVersion")
 
-            // dependency injection
-            implementation("io.insert-koin:koin-core:$koinVersion")
-            api("io.insert-koin:koin-annotations:$koinAnnotaionsVersion")
-            //life cycle
-            implementation("io.insert-koin:koin-compose:$koinVersion")
-            implementation("io.insert-koin:koin-compose-viewmodel:$koinVersion")
-            implementation("io.insert-koin:koin-compose-viewmodel-navigation:$koinVersion") */
+                // dependency injection
+                implementation("io.insert-koin:koin-core:$koinVersion")
+                api("io.insert-koin:koin-annotations:$koinAnnotaionsVersion")
+                //life cycle
+                implementation("io.insert-koin:koin-compose:$koinVersion")
+                implementation("io.insert-koin:koin-compose-viewmodel:$koinVersion")
+                implementation("io.insert-koin:koin-compose-viewmodel-navigation:$koinVersion") */
         }
 
         commonTest.dependencies {
@@ -119,7 +118,7 @@ kotlin {
             implementation(libs.kotlinx.coroutinesSwing)
             implementation(libs.ktor.client.java)
 
-        //    implementation("io.ktor:ktor-client-java:$ktorVersion")
+            //    implementation("io.ktor:ktor-client-java:$ktorVersion")
 
         }
     }
@@ -127,11 +126,11 @@ kotlin {
         kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
     }
 }
-project.tasks.withType(KotlinCompilationTask::class.java).configureEach {
-    if(name != "kspCommonMainKotlinMetadata") {
-        dependsOn("kspCommonMainKotlinMetadata")
-    }
+ksp {
+    arg("KOIN_USE_COMPOSE_VIEWMODEL", "true")
+    arg("KOIN_CONFIG_CHECK", "true")
 }
+
 android {
     namespace = "org.smartroots"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
@@ -160,18 +159,15 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 }
-ksp {
-    arg("KOIN_USE_COMPOSE_VIEWMODEL","true")
-    arg("KOIN_CONFIG_CHECK","true")
-}
+
 dependencies {
     debugImplementation(compose.uiTooling)
-
- add("kspCommonMainMetadata", libs.koin.ksp.compiler)
-    add("kspAndroid", libs.koin.ksp.compiler)
-    add("kspIosX64", libs.koin.ksp.compiler)
-    add("kspIosArm64", libs.koin.ksp.compiler)
-    add("kspIosSimulatorArm64", libs.koin.ksp.compiler)
+    add("kspCommonMainMetadata", libs.koin.ksp.compiler)
+}
+project.tasks.withType(KotlinCompilationTask::class.java).configureEach {
+    if (name != "kspCommonMainKotlinMetadata") {
+        dependsOn("kspCommonMainKotlinMetadata")
+    }
 }
 
 compose.desktop {
