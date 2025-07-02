@@ -1,9 +1,8 @@
-import com.google.devtools.ksp.gradle.KspTask
+
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -180,5 +179,26 @@ compose.desktop {
             packageName = "org.smartroots"
             packageVersion = "1.0.0"
         }
+    }
+}
+project.afterEvaluate {
+    // This block of code is now "lazy". It will only run after Gradle has
+    // finished parsing the whole file and all plugins have created their tasks.
+
+    val kspTasks = tasks.withType<com.google.devtools.ksp.gradle.KspTask>()
+
+    // Use findByName for safety. It returns null instead of crashing if not found.
+    val kspCommonMain = tasks.findByName("kspCommonMainKotlinMetadata")
+
+    if (kspCommonMain != null) {
+        kspTasks.configureEach {
+            // Ensure the task is not the common one itself.
+            if (name != kspCommonMain.name) {
+                // This creates the dependency we need.
+                dependsOn(kspCommonMain)
+            }
+        }
+    } else {
+        logger.warn("Task 'kspCommonMainKotlinMetadata' was not found. KSP dependency configuration will be skipped.")
     }
 }
