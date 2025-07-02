@@ -1,3 +1,4 @@
+import com.google.devtools.ksp.gradle.KspTask
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -85,7 +86,7 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
 
             implementation(libs.ktor.client.core)
-            implementation(libs.ktorfit)
+            implementation(libs.ktorfit.lib)
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
             /*    // kotlin serialization
@@ -168,10 +169,15 @@ dependencies {
     add("kspIosArm64", libs.koin.ksp.compiler)
     add("kspIosSimulatorArm64", libs.koin.ksp.compiler)
 }
-project.tasks.withType(KotlinCompilationTask::class.java).configureEach {
-    if (name != "kspCommonMainKotlinMetadata") {
-        dependsOn("kspCommonMainKotlinMetadata")
+tasks.withType<KspTask>().configureEach { // Or a more specific KspTask type if needed
+    if (name.startsWith("ksp") && name.contains("Android", ignoreCase = true)) {
+        // This targets tasks like kspDebugKotlinAndroid, kspReleaseKotlinAndroid
+        if (name != "kspCommonMainKotlinMetadata" && !name.endsWith("Metadata")) {
+            logger.info("Configuring $name to depend on kspCommonMainKotlinMetadata")
+            dependsOn("kspCommonMainKotlinMetadata")
+        }
     }
+
 }
 
 compose.desktop {
