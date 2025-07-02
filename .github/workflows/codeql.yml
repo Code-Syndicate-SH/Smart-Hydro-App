@@ -2,9 +2,9 @@ name: CodeQL Analysis
 
 on:
   push:
-    branches: ["feature/**"]
+    branches: [ "feature/**","task/**" ]
   pull_request:
-    branches: [main]
+    branches: [ "main" ]
 
 jobs:
   codeql:
@@ -31,8 +31,13 @@ jobs:
         with:
           languages: java
 
-      - name: Build for CodeQL
-        run: ./gradlew build
+
+      - name: Build Shared Module
+        run: ./gradlew :composeApp:build
+
+      - name: Run Shared Unit Tests
+        run: ./gradlew :composeApp:test
+        task/gradle-setup
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
