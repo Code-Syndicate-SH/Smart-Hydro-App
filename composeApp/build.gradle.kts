@@ -122,9 +122,9 @@ kotlin {
 
         }
     }
-    sourceSets.named("commonMain").configure {
+   /* sourceSets.named("commonMain").configure {
         kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
-    }
+    }*/
 }
 ksp {
     arg("KOIN_USE_COMPOSE_VIEWMODEL", "true")
