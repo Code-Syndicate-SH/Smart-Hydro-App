@@ -9,11 +9,11 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
-
     // plugins
     alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.ktorfit)
     alias(libs.plugins.ksp)
+
  /*   id("org.jetbrains.kotlin.plugin.serialization") version "2.2.0"
     id("de.jensklingenberg.ktorfit") version "2.5.2"
     id("com.google.devtools.ksp") version "2.2.0-2.0.2"*/
@@ -71,7 +71,7 @@ kotlin {
 
             // koin dependancies
             implementation(libs.koin.core)
-            implementation(libs.koin.annotations)
+            api(libs.koin.annotations)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.koin.compose.viewmodel.navigation)
@@ -79,7 +79,6 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
 
             implementation(libs.ktorfit)
-
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
         /*    // kotlin serialization
