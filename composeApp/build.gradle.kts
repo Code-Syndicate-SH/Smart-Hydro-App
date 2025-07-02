@@ -1,4 +1,4 @@
-import com.google.devtools.ksp.gradle.KspAATask
+
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -25,9 +25,7 @@ configurations.all {
     // drop any ktor-client-core-jvm before it ever goes into an Android dex jar
     exclude(group = "io.ktor", module = "ktor-client-core-jvm")
 }
-tasks.withType(KspAATask::class.java).configureEach {
-    dependsOn("kspCommonMainKotlinMetadata")
-}
+
 kotlin {
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
@@ -87,6 +85,7 @@ kotlin {
 
             implementation(libs.kotlinx.serialization.json)
 
+            implementation(libs.ktor.client.core)
             implementation(libs.ktorfit)
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
