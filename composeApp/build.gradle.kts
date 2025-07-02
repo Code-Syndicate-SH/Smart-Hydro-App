@@ -1,3 +1,4 @@
+import com.google.devtools.ksp.gradle.KspAATask
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -19,7 +20,9 @@ plugins {
     id("com.google.devtools.ksp") version "2.2.0-2.0.2"*/
 
 }
-
+tasks.withType(KspAATask::class.java).configureEach {
+    dependsOn("kspCommonMainKotlinMetadata")
+}
 kotlin {
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
