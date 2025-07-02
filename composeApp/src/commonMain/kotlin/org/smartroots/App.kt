@@ -42,3 +42,9 @@ fun App() {
         }
     }
 }
+
+
+@Composable
+fun balatext(){
+    Text("Hello bala boy")
+}

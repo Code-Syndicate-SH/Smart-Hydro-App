@@ -1,6 +1,7 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -8,9 +9,15 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.2.0"
+
+    // plugins
+    alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.ktorfit)
+    alias(libs.plugins.ksp)
+ /*   id("org.jetbrains.kotlin.plugin.serialization") version "2.2.0"
     id("de.jensklingenberg.ktorfit") version "2.5.2"
-    id("com.google.devtools.ksp") version "2.2.0-2.0.2"
+    id("com.google.devtools.ksp") version "2.2.0-2.0.2"*/
+
 }
 
 kotlin {
@@ -36,23 +43,18 @@ kotlin {
 
     sourceSets {
         val desktopMain by getting
-
-        val ktorfitVersion = "2.5.1"
-        val ktorVersion = "3.2.0"
-        val koinVersion = "4.1.0"
-        val koinAnnotaionsVersion = "2.1.0"
-        val multidexVersion = "2.0.1"
-
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
-            implementation("io.ktor:ktor-client-android:$ktorVersion")
-
-            implementation("androidx.multidex:multidex:$multidexVersion")
+            implementation(libs.ktor.client.android)
+           /*implementation("io.ktor:ktor-client-android:$ktorVersion")
+             implementation(libs.androidx.)
+            implementation("androidx.multidex:multidex:$multidexVersion")*/
         }
 
         nativeMain.dependencies {
-            implementation("io.ktor:ktor-client-darwin:$ktorVersion")
+        /*    implementation("io.ktor:ktor-client-darwin:$ktorVersion")*/
+            implementation(libs.ktor.client.darwin)
         }
 
         commonMain.dependencies {
@@ -64,7 +66,23 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtimeCompose)
-            // kotlin serialization
+
+            implementation(libs.jetbrains.compose.navigation)
+
+            // koin dependancies
+            implementation(libs.koin.core)
+            implementation(libs.koin.annotations)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.koin.compose.viewmodel.navigation)
+
+            implementation(libs.kotlinx.serialization.json)
+
+            implementation(libs.ktorfit)
+
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor)
+        /*    // kotlin serialization
             implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
 
             // coroutines for async
@@ -83,7 +101,10 @@ kotlin {
             //life cycle
             implementation("io.insert-koin:koin-compose:$koinVersion")
             implementation("io.insert-koin:koin-compose-viewmodel:$koinVersion")
-            implementation("io.insert-koin:koin-compose-viewmodel-navigation:$koinVersion")
+            implementation("io.insert-koin:koin-compose-viewmodel-navigation:$koinVersion") */
+        }
+        sourceSets.named("commonMain").configure {
+            kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -91,7 +112,10 @@ kotlin {
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
-            implementation("io.ktor:ktor-client-java:$ktorVersion")
+            implementation(libs.ktor.client.java)
+
+        //    implementation("io.ktor:ktor-client-java:$ktorVersion")
+
         }
     }
 }
@@ -129,8 +153,18 @@ ksp {
 }
 dependencies {
     debugImplementation(compose.uiTooling)
-}
 
+ add("kspCommonMainMetadata", libs.koin.ksp.compiler)
+    add("kspAndroid", libs.koin.ksp.compiler)
+    add("kspIosX64", libs.koin.ksp.compiler)
+    add("kspIosArm64", libs.koin.ksp.compiler)
+    add("kspIosSimulatorArm64", libs.koin.ksp.compiler)
+}
+project.tasks.withType(KotlinCompilationTask::class.java).configureEach {
+    if (name != "kspCommonMainKotlinMetadata") {
+        dependsOn("kspCommonMainKotlinMetadata")
+    }
+}
 compose.desktop {
     application {
         mainClass = "org.smartroots.MainKt"
