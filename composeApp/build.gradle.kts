@@ -163,6 +163,10 @@ android {
 dependencies {
     debugImplementation(compose.uiTooling)
     add("kspCommonMainMetadata", libs.koin.ksp.compiler)
+    add("kspAndroid", libs.koin.ksp.compiler)
+    add("kspIosX64", libs.koin.ksp.compiler)
+    add("kspIosArm64", libs.koin.ksp.compiler)
+    add("kspIosSimulatorArm64", libs.koin.ksp.compiler)
 }
 project.tasks.withType(KotlinCompilationTask::class.java).configureEach {
     if (name != "kspCommonMainKotlinMetadata") {
