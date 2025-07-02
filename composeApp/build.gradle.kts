@@ -114,12 +114,16 @@ kotlin {
         //    implementation("io.ktor:ktor-client-java:$ktorVersion")
 
         }
-        sourceSets.named("commonMain").configure {
-            kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
-        }
+    }
+    sourceSets.named("commonMain").configure {
+        kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
     }
 }
-
+project.tasks.withType(KotlinCompilationTask::class.java).configureEach {
+    if(name != "kspCommonMainKotlinMetadata") {
+        dependsOn("kspCommonMainKotlinMetadata")
+    }
+}
 android {
     namespace = "org.smartroots"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
@@ -150,6 +154,7 @@ android {
 }
 ksp {
     arg("KOIN_USE_COMPOSE_VIEWMODEL","true")
+    arg("KOIN_CONFIG_CHECK","true")
 }
 dependencies {
     debugImplementation(compose.uiTooling)
@@ -160,11 +165,7 @@ dependencies {
     add("kspIosArm64", libs.koin.ksp.compiler)
     add("kspIosSimulatorArm64", libs.koin.ksp.compiler)
 }
-project.tasks.withType(KotlinCompilationTask::class.java).configureEach {
-    if(name != "kspCommonMainKotlinMetadata") {
-        dependsOn("kspCommonMainKotlinMetadata")
-    }
-}
+
 compose.desktop {
     application {
         mainClass = "org.smartroots.MainKt"
