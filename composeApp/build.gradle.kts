@@ -1,4 +1,5 @@
 
+import de.jensklingenberg.ktorfit.gradle.ErrorCheckingMode
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -15,13 +16,9 @@ plugins {
     alias(libs.plugins.ktorfit)
     alias(libs.plugins.ksp)
 
-    /*   id("org.jetbrains.kotlin.plugin.serialization") version "2.2.0"
-       id("de.jensklingenberg.ktorfit") version "2.5.2"
-       id("com.google.devtools.ksp") version "2.2.0-2.0.2"*/
 
 }
 configurations.all {
-    // drop any ktor-client-core-jvm before it ever goes into an Android dex jar
     exclude(group = "io.ktor", module = "ktor-client-core-jvm")
 }
 
@@ -43,7 +40,10 @@ kotlin {
             isStatic = true
         }
     }
-
+    ktorfit {
+        generateQualifiedTypeName = true
+        errorCheckingMode = ErrorCheckingMode.NONE
+    }
     jvm("desktop")
 
     sourceSets {
@@ -77,7 +77,6 @@ kotlin {
 
             // koin dependancies
             implementation(libs.koin.core)
-            api(libs.koin.annotations)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.koin.compose.viewmodel.navigation)
@@ -88,26 +87,6 @@ kotlin {
             implementation(libs.ktorfit.lib)
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
-            /*    // kotlin serialization
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
-
-                // coroutines for async
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
-
-                // ktorfit( for using a retrofit like system), api requests
-                implementation("de.jensklingenberg.ktorfit:ktorfit-lib:$ktorfitVersion")
-
-                // below is for coil3 image loading
-                implementation("io.coil-kt.coil3:coil-compose:3.2.0")
-                implementation("io.coil-kt.coil3:coil-network-ktor3:$ktorVersion")
-
-                // dependency injection
-                implementation("io.insert-koin:koin-core:$koinVersion")
-                api("io.insert-koin:koin-annotations:$koinAnnotaionsVersion")
-                //life cycle
-                implementation("io.insert-koin:koin-compose:$koinVersion")
-                implementation("io.insert-koin:koin-compose-viewmodel:$koinVersion")
-                implementation("io.insert-koin:koin-compose-viewmodel-navigation:$koinVersion") */
         }
 
         commonTest.dependencies {
@@ -118,17 +97,9 @@ kotlin {
             implementation(libs.kotlinx.coroutinesSwing)
             implementation(libs.ktor.client.java)
 
-            //    implementation("io.ktor:ktor-client-java:$ktorVersion")
 
         }
     }
-   /* sourceSets.named("commonMain").configure {
-        kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
-    }*/
-}
-ksp {
-    arg("KOIN_USE_COMPOSE_VIEWMODEL", "true")
-    arg("KOIN_CONFIG_CHECK", "true")
 }
 
 android {
@@ -166,11 +137,6 @@ android {
 
 dependencies {
     debugImplementation(compose.uiTooling)
-    add("kspCommonMainMetadata", libs.koin.ksp.compiler)
-    add("kspAndroid", libs.koin.ksp.compiler)
-    add("kspIosX64", libs.koin.ksp.compiler)
-    add("kspIosArm64", libs.koin.ksp.compiler)
-    add("kspIosSimulatorArm64", libs.koin.ksp.compiler)
 }
 
 
@@ -185,24 +151,4 @@ compose.desktop {
         }
     }
 }
-project.afterEvaluate {
-    // This block of code is now "lazy". It will only run after Gradle has
-    // finished parsing the whole file and all plugins have created their tasks.
 
-    val kspTasks = tasks.withType<com.google.devtools.ksp.gradle.KspTask>()
-
-    // Use findByName for safety. It returns null instead of crashing if not found.
-    val kspCommonMain = tasks.findByName("kspCommonMainKotlinMetadata")
-
-    if (kspCommonMain != null) {
-        kspTasks.configureEach {
-            // Ensure the task is not the common one itself.
-            if (name != kspCommonMain.name) {
-                // This creates the dependency we need.
-                dependsOn(kspCommonMain)
-            }
-        }
-    } else {
-        logger.warn("Task 'kspCommonMainKotlinMetadata' was not found. KSP dependency configuration will be skipped.")
-    }
-}
