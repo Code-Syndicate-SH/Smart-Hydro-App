@@ -1,5 +1,5 @@
 
-import de.jensklingenberg.ktorfit.gradle.ErrorCheckingMode
+
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -13,12 +13,15 @@ plugins {
     alias(libs.plugins.composeHotReload)
     // plugins
     alias(libs.plugins.jetbrains.kotlin.serialization)
-    alias(libs.plugins.ktorfit)
-    alias(libs.plugins.ksp)
 
+
+    /*   id("org.jetbrains.kotlin.plugin.serialization") version "2.2.0"
+       id("de.jensklingenberg.ktorfit") version "2.5.2"
+       id("com.google.devtools.ksp") version "2.2.0-2.0.2"*/
 
 }
 configurations.all {
+    // drop any ktor-client-core-jvm before it ever goes into an Android dex jar
     exclude(group = "io.ktor", module = "ktor-client-core-jvm")
 }
 
@@ -40,10 +43,7 @@ kotlin {
             isStatic = true
         }
     }
-    ktorfit {
-        generateQualifiedTypeName = true
-        errorCheckingMode = ErrorCheckingMode.NONE
-    }
+
     jvm("desktop")
 
     sourceSets {
@@ -53,13 +53,10 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.android)
 
-            /*implementation("io.ktor:ktor-client-android:$ktorVersion")
-              implementation(libs.androidx.)
-             implementation("androidx.multidex:multidex:$multidexVersion")*/
         }
 
         nativeMain.dependencies {
-            /*    implementation("io.ktor:ktor-client-darwin:$ktorVersion")*/
+
             implementation(libs.ktor.client.darwin)
         }
 
@@ -77,6 +74,7 @@ kotlin {
 
             // koin dependancies
             implementation(libs.koin.core)
+
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.koin.compose.viewmodel.navigation)
@@ -84,9 +82,11 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
 
             implementation(libs.ktor.client.core)
-            implementation(libs.ktorfit.lib)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
+
         }
 
         commonTest.dependencies {
@@ -95,11 +95,14 @@ kotlin {
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
-            implementation(libs.ktor.client.java)
-
+            implementation(libs.ktor.client.cio)
 
         }
     }
+
+}
+dependencies{
+    implementation(libs.koin.core)
 }
 
 android {
@@ -137,6 +140,7 @@ android {
 
 dependencies {
     debugImplementation(compose.uiTooling)
+
 }
 
 
@@ -151,4 +155,3 @@ compose.desktop {
         }
     }
 }
-
