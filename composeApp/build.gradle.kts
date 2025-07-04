@@ -20,10 +20,7 @@ plugins {
        id("com.google.devtools.ksp") version "2.2.0-2.0.2"*/
 
 }
-configurations.all {
-    // drop any ktor-client-core-jvm before it ever goes into an Android dex jar
-    exclude(group = "io.ktor", module = "ktor-client-core-jvm")
-}
+
 
 kotlin {
     androidTarget {
