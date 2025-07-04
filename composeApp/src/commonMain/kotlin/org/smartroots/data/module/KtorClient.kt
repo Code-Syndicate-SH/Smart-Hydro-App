@@ -9,9 +9,6 @@ import kotlinx.serialization.json.Json
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-
-
-
 fun createHttpClient(): HttpClient{
    return HttpClient(){
         install(ContentNegotiation){
