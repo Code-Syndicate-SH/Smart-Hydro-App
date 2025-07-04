@@ -10,3 +10,13 @@ import org.koin.dsl.module
 import org.smartroots.data.model.Sensor
 import org.smartroots.data.module.createHttpClient
 
+class ApiSensorReadingImpl(val tentClient: HttpClient,val localURL:String,val remoteUrl:String): ApiSensorReading{
+    override suspend fun getSensorReading(isLocal: Boolean): Sensor {
+        val baseURL = if(isLocal){
+            localURL
+        }else{
+            remoteUrl
+        }
+        return tentClient.get("$baseURL/r/n/r/n").body()
+    }
+}
