@@ -8,11 +8,11 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import org.smartroots.data.model.Sensor
 
 
 
-fun createHttpClient(baseURL: String): HttpClient{
+
+fun createHttpClient(): HttpClient{
    return HttpClient(){
         install(ContentNegotiation){
             json(Json {
@@ -26,6 +26,7 @@ fun createHttpClient(baseURL: String): HttpClient{
 val ktorClientModule = module {
  single(named("BASE_URL_LOCAL")){"http://192.168.8.14/"}
  single(named("BASE_URL_REMOTE")){"http://192.168.8.14/"}
+ single{createHttpClient()}
 }
 
 
