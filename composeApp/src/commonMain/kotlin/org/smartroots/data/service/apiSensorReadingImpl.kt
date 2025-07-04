@@ -21,6 +21,16 @@ class ApiSensorReadingImpl(val tentClient: HttpClient,val localURL:String,val re
         }
         return tentClient.get("$baseURL/r/n/r/n").body()
     }
+
+    override suspend fun getHistoricSensorReading(isLocal: Boolean): List<Sensor> {
+        val baseURL = if(isLocal){
+            localURL
+        }else{
+            remoteUrl
+        }
+        return tentClient.get("$baseURL/historicData").body()
+    }
+
 }
 val SensorReadingModule = module{
  single<ApiSensorReading> {params->
