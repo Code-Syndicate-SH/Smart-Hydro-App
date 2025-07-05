@@ -3,22 +3,19 @@ package org.smartroots.data.service
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
-import io.ktor.client.request.request
 import io.ktor.client.statement.HttpResponse
-import io.ktor.http.HttpMethod
-import io.ktor.http.URLProtocol
-import io.ktor.http.path
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.smartroots.data.model.Sensor
 
-class SensorAPIImpl(val tentClient: HttpClient, val localURL:String, val remoteUrl:String,): SensorAPI{
-    constructor( tentClient: HttpClient,  localURL:String,  remoteUrl:String, usingLocalNetwork:Boolean):this(tentClient, localURL,  remoteUrl){
+class SensorAPIImpl(
+    val tentClient: HttpClient,
+    val localURL: String,
+    val remoteUrl: String,
+    usingLocalNetwork: Boolean,
+) : SensorAPI {
 
-           baseURL =  if(usingLocalNetwork)localURL else remoteUrl
-    }
-    private var baseURL: String =""
-
+    val baseURL: String = if (usingLocalNetwork) localURL else remoteUrl
     override suspend fun getSensorReading(): Sensor {
         return tentClient.get("$baseURL/r/n/r/n").body()
     }
@@ -69,8 +66,14 @@ class SensorAPIImpl(val tentClient: HttpClient, val localURL:String, val remoteU
 
 
 }
-val SensorReadingModule = module{
- single<SensorAPI> { params->
-     SensorAPIImpl(tentClient = get(), localURL = get(named("BASE_URL_LOCAL")), remoteUrl = get(named("BASE_URL_REMOTE")) )
- }
+
+val SensorReadingModule = module {
+    single<SensorAPI> { params ->
+        SensorAPIImpl(
+            tentClient = get(),
+            localURL = get(named("BASE_URL_LOCAL")),
+            remoteUrl = get(named("BASE_URL_REMOTE")),
+            usingLocalNetwork = params.get()
+        )
+    }
 }
