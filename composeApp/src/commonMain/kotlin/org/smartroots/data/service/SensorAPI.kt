@@ -4,8 +4,8 @@ import io.ktor.client.statement.HttpResponse
 import org.smartroots.data.model.Sensor
 
 interface SensorAPI {
-    suspend fun getSensorReading(isLocal: Boolean): Sensor
-    suspend fun getHistoricSensorReading(isLocal: Boolean): List<Sensor>
+    suspend fun getSensorReading(): Sensor
+    suspend fun getHistoricSensorReading(): List<Sensor>
 
     //light
     suspend fun toggleLight(): HttpResponse

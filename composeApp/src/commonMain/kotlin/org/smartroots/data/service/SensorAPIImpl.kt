@@ -13,22 +13,17 @@ import org.koin.dsl.module
 import org.smartroots.data.model.Sensor
 
 class SensorAPIImpl(val tentClient: HttpClient, val localURL:String, val remoteUrl:String,): SensorAPI{
-    constructor( tentClient: HttpClient,  localURL:String,  remoteUrl:String, isLocal:Boolean):this(tentClient, localURL,  remoteUrl){
+    constructor( tentClient: HttpClient,  localURL:String,  remoteUrl:String, usingLocalNetwork:Boolean):this(tentClient, localURL,  remoteUrl){
 
-           baseURL =  if(isLocal)localURL else remoteUrl
+           baseURL =  if(usingLocalNetwork)localURL else remoteUrl
     }
     private var baseURL: String =""
 
-    override suspend fun getSensorReading(isLocal: Boolean): Sensor {
-        val baseURL = if(isLocal){
-            localURL
-        }else{
-            remoteUrl
-        }
+    override suspend fun getSensorReading(): Sensor {
         return tentClient.get("$baseURL/r/n/r/n").body()
     }
 
-    override suspend fun getHistoricSensorReading(isLocal: Boolean): List<Sensor> {
+    override suspend fun getHistoricSensorReading(): List<Sensor> {
         return tentClient.get("$baseURL/historicData").body()
     }
 
