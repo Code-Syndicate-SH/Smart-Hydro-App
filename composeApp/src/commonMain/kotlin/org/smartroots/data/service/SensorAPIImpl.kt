@@ -15,11 +15,7 @@ import org.smartroots.data.model.Sensor
 class SensorAPIImpl(val tentClient: HttpClient, val localURL:String, val remoteUrl:String,): SensorAPI{
     constructor( tentClient: HttpClient,  localURL:String,  remoteUrl:String, isLocal:Boolean):this(tentClient, localURL,  remoteUrl){
 
-            if(isLocal){
-                baseURL=localURL
-            }else{
-                remoteUrl
-            }
+           baseURL =  if(isLocal)localURL else remoteUrl
     }
     private var baseURL: String =""
 
@@ -33,11 +29,6 @@ class SensorAPIImpl(val tentClient: HttpClient, val localURL:String, val remoteU
     }
 
     override suspend fun getHistoricSensorReading(isLocal: Boolean): List<Sensor> {
-        val baseURL = if(isLocal){
-            localURL
-        }else{
-            remoteUrl
-        }
         return tentClient.get("$baseURL/historicData").body()
     }
 
@@ -46,45 +37,39 @@ class SensorAPIImpl(val tentClient: HttpClient, val localURL:String, val remoteU
     }
 
     override suspend fun toggleFan(): HttpResponse {
-        return tentClient.get{
-        url{
-            protocol = URLProtocol.HTTP
-            host = baseURL
-            path("light")
-        }
-        }
+        return tentClient.get("$baseURL/fan").body()
     }
 
     override suspend fun toggleExtractor(): HttpResponse {
-        TODO("Not yet implemented")
+        return tentClient.get("$baseURL/extractor").body()
     }
 
     override suspend fun togglePump(): HttpResponse {
-        TODO("Not yet implemented")
+        return tentClient.get("$baseURL/pump").body()
     }
 
     override suspend fun ec(): HttpResponse {
-        TODO("Not yet implemented")
+        return tentClient.get("$baseURL/ec").body()
     }
 
     override suspend fun ecUp(): HttpResponse {
-        TODO("Not yet implemented")
+        return tentClient.get("$baseURL/ecUp").body()
     }
 
     override suspend fun ecDown(): HttpResponse {
-        TODO("Not yet implemented")
+        return tentClient.get("$baseURL/ecDown").body()
     }
 
     override suspend fun pH(): HttpResponse {
-        TODO("Not yet implemented")
+        return tentClient.get("$baseURL/ph").body()
     }
 
     override suspend fun pHUp(): HttpResponse {
-        TODO("Not yet implemented")
+        return tentClient.get("$baseURL/pHUp").body()
     }
 
     override suspend fun pHDown(): HttpResponse {
-        TODO("Not yet implemented")
+        return tentClient.get("$baseURL/pHDown").body()
     }
 
 
