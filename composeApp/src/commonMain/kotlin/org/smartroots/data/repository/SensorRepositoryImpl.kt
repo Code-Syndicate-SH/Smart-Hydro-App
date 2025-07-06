@@ -9,8 +9,9 @@ import org.smartroots.data.model.Sensor
 import org.smartroots.data.service.SensorAPI
 
 class SensorRepositoryImpl(val usingLocalNetwork: Boolean, val sensorAPI: SensorAPI): SensorRepository {
+
     override suspend fun fetchSensorReading(): Sensor {
-        TODO("Not yet implemented")
+        return sensorAPI.getSensorReading()
     }
 
     override suspend fun fetchHistoricSensorReadings(): List<Sensor> {
@@ -58,5 +59,5 @@ class SensorRepositoryImpl(val usingLocalNetwork: Boolean, val sensorAPI: Sensor
     }
 }
 val sensorRepositoryModule = module{
-   factory<SensorRepository> {params-> SensorRepositoryImpl(usingLocalNetwork = params.get(), get()) }
+   factory<SensorRepository> {params-> SensorRepositoryImpl(usingLocalNetwork =params.get(), get()) }
 }

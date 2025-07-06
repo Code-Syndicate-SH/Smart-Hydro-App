@@ -19,7 +19,7 @@ fun createHttpClient(): HttpClient{
 }
 val ktorClientModule = module {
  single(named("BASE_URL_LOCAL")){"http://192.168.8.14/"}
- single(named("BASE_URL_REMOTE")){"http://192.168.8.14/"}
+ single(named("BASE_URL_REMOTE")){"http://192.168.1.102/"} // this will change to web service soon.
  single{createHttpClient()}
 }
 
