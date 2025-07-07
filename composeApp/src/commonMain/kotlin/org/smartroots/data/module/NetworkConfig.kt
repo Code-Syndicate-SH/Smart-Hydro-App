@@ -10,6 +10,9 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.smartroots.data.model.NetworkConfigState
 
+/**
+ *  @author Shravan Ramjathan
+ */
 class NetworkConfig() {
     private val _currentConnectionStatus =
         MutableStateFlow<NetworkConfigState>(NetworkConfigState())
@@ -29,40 +32,47 @@ class NetworkConfig() {
     }
 
     private fun getConnectionType(): NetworkConnection? {
-        return _currentConnectionStatus.value.currentConnectionStatus
+        return currentConnectionStatus.value.currentConnectionStatus
     }
-    private fun determineNetworkLabel(ipv4:String):String{
-        return when{
 
-            ipv4.startsWith("192.168.8.")-> "Local"
-            ipv4.startsWith("192.168.1.")-> "Remote"
-            else-> "Unknown"
+    private fun determineNetworkLabel(ipv4: String): String {
+        return when {
+
+            ipv4.startsWith("192.168.8.") -> "Local"
+            ipv4.startsWith("192.168.1.") -> "Remote"
+            else -> "Unknown"
         }
     }
+
     suspend fun checkNetworkInfo(): Map<NetworkConnection, String> {
         val connection = _currentConnectionStatus.value.konnection
-        val connectionType = getConnectionType()
+        val connectionType: NetworkConnection? = checkConnectionStatus()
         val currentConnectionMap: MutableMap<NetworkConnection, String> = mutableMapOf(
-            NetworkConnection.UNKNOWN_CONNECTION_TYPE to "Unknown connection"
+            NetworkConnection.UNKNOWN_CONNECTION_TYPE to ""
         )   // this will hold what the user is on, and the address
         if (connectionType == NetworkConnection.BLUETOOTH_TETHERING) {
-            mapOf(NetworkConnection.BLUETOOTH_TETHERING to "Bluetooth")
-        } else if(connectionType==null) {
-            currentConnectionMap
+            return mapOf(NetworkConnection.BLUETOOTH_TETHERING to "Bluetooth")
+        } else if (connectionType == null) {
+            return currentConnectionMap
         }
         val connectionInfo: ConnectionInfo? = connection.getInfo()
         if (connectionInfo == null) {
             return currentConnectionMap   // returns empty map
         }
-        val ipv4Address: String? = connection.getInfo()?.externalIp
+        val ipv4Address: String? = connectionInfo.ipv4
         if (ipv4Address == null) {
             return currentConnectionMap
         }
-
+        val label = determineNetworkLabel(ipv4Address)
+        if (label == "Unknown") {
+            currentConnectionMap[NetworkConnection.UNKNOWN_CONNECTION_TYPE] = label
+            return currentConnectionMap
+        }
+        currentConnectionMap.remove(NetworkConnection.UNKNOWN_CONNECTION_TYPE)
+        currentConnectionMap.put(connectionType, label)
         return currentConnectionMap
     }
 
-    // rememeber to do dependency injection
 
 }
 
