@@ -4,18 +4,20 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse
+import io.ktor.http.URLBuilder
+import io.ktor.http.Url
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.smartroots.data.model.Sensor
+import org.smartroots.data.module.NetworkConfig
 
 class SensorAPIImpl(
     val tentClient: HttpClient,
-    val localURL: String,
-    val remoteUrl: String,
-    usingLocalNetwork: Boolean,
+   val  baseURL: String
 ) : SensorAPI {
 
-    val baseURL: String = if (usingLocalNetwork) localURL else remoteUrl
+
+
     override suspend fun getSensorReading(): Sensor {
         return tentClient.get("$baseURL/r/n/r/n").body()
     }
@@ -70,10 +72,9 @@ class SensorAPIImpl(
 val SensorReadingModule = module {
     single<SensorAPI> { params ->
         SensorAPIImpl(
+            baseURL = params.get(),
             tentClient = get(),
-            localURL = get(named("BASE_URL_LOCAL")),
-            remoteUrl = get(named("BASE_URL_REMOTE")),
-            usingLocalNetwork = params.get()
+
         )
     }
 }
