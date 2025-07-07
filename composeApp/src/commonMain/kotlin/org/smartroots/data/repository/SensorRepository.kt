@@ -2,7 +2,9 @@ package org.smartroots.data.repository
 
 import io.ktor.client.statement.HttpResponse
 import org.smartroots.data.model.Sensor
-
+/**
+ * @author Shravan Ramjathan
+ */
 interface SensorRepository {
     suspend fun fetchSensorReading(): Sensor
     suspend fun fetchHistoricSensorReadings(): List<Sensor>

@@ -11,11 +11,13 @@ import org.koin.dsl.module
 import org.smartroots.data.model.Sensor
 import org.smartroots.data.module.NetworkConfig
 
+/**
+ * @author Shravan Ramjathan
+ */
 class SensorAPIImpl(
     val tentClient: HttpClient,
    val  baseURL: String
 ) : SensorAPI {
-
 
 
     override suspend fun getSensorReading(): Sensor {

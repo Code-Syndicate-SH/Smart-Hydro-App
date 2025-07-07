@@ -2,7 +2,9 @@ package org.smartroots.data.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-
+/**
+ * @author Shravan Ramjathan
+ */
 @Serializable
 data class Sensor(
     @SerialName("EC")
