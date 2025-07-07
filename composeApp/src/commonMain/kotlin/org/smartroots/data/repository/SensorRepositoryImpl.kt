@@ -8,7 +8,7 @@ import org.koin.dsl.module
 import org.smartroots.data.model.Sensor
 import org.smartroots.data.service.SensorAPI
 
-class SensorRepositoryImpl(val usingLocalNetwork: Boolean, val sensorAPI: SensorAPI): SensorRepository {
+class SensorRepositoryImpl(val baseURL: String, val sensorAPI: SensorAPI): SensorRepository {
 
     override suspend fun fetchSensorReading(): Sensor {
         return sensorAPI.getSensorReading()
@@ -59,5 +59,5 @@ class SensorRepositoryImpl(val usingLocalNetwork: Boolean, val sensorAPI: Sensor
     }
 }
 val sensorRepositoryModule = module{
-   factory<SensorRepository> {params-> SensorRepositoryImpl(usingLocalNetwork =params.get(), get()) }
+   factory<SensorRepository> {params-> SensorRepositoryImpl(baseURL =params.get(), get()) }
 }
