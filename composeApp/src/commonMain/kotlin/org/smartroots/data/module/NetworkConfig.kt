@@ -31,9 +31,6 @@ class NetworkConfig() {
         return currentConnectionStatus.value.currentConnectionStatus
     }
 
-    private fun getConnectionType(): NetworkConnection? {
-        return currentConnectionStatus.value.currentConnectionStatus
-    }
 
     private fun determineNetworkLabel(ipv4: String): String {
         return when {
