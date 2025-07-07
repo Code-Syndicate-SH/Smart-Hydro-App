@@ -9,7 +9,7 @@ import org.smartroots.data.model.Sensor
 import org.smartroots.data.service.SensorAPI
 
 /**
- *  @author Shravan Ramjathan
+ *  @author Shravan Ramjatha
  */
 class SensorRepositoryImpl(val baseURL: String, val sensorAPI: SensorAPI): SensorRepository {
 

@@ -4,5 +4,5 @@ import dev.tmapps.konnection.NetworkConnection
 
 interface NetworkConfigRepository {
     fun checkConnectionStatus(): NetworkConnection?
-    suspend fun checkNetworkInfo(): Map<NetworkConnection?,String>
+    suspend fun checkNetworkInfo(): Map<NetworkConnection,String>
 }
