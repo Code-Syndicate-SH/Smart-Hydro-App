@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.update
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.smartroots.data.model.NetworkConfigState
+import org.smartroots.data.model.NetworkInfo
 
 /**
  *  @author Shravan Ramjathan
@@ -41,33 +42,28 @@ class NetworkConfig() {
         }
     }
 
-    suspend fun checkNetworkInfo(): Map<NetworkConnection, String> {
+    suspend fun checkNetworkInfo(): NetworkInfo {
         val connection = _currentConnectionStatus.value.konnection
         val connectionType: NetworkConnection? = checkConnectionStatus()
-        val currentConnectionMap: MutableMap<NetworkConnection, String> = mutableMapOf(
-            NetworkConnection.UNKNOWN_CONNECTION_TYPE to ""
-        )   // this will hold what the user is on, and the address
         if (connectionType == NetworkConnection.BLUETOOTH_TETHERING) {
-            return mapOf(NetworkConnection.BLUETOOTH_TETHERING to "Bluetooth")
+            return NetworkInfo(networkType = NetworkConnection.BLUETOOTH_TETHERING)
         } else if (connectionType == null) {
-            return currentConnectionMap
+            return NetworkInfo()
         }
         val connectionInfo: ConnectionInfo? = connection.getInfo()
         if (connectionInfo == null) {
-            return currentConnectionMap   // returns empty map
+            return NetworkInfo()   // returns empty map
         }
         val ipv4Address: String? = connectionInfo.ipv4
         if (ipv4Address == null) {
-            return currentConnectionMap
+            return NetworkInfo()
         }
         val label = determineNetworkLabel(ipv4Address)
         if (label == "Unknown") {
-            currentConnectionMap[NetworkConnection.UNKNOWN_CONNECTION_TYPE] = label
-            return currentConnectionMap
+          return NetworkInfo()
         }
-        currentConnectionMap.remove(NetworkConnection.UNKNOWN_CONNECTION_TYPE)
-        currentConnectionMap.put(connectionType, label)
-        return currentConnectionMap
+
+        return NetworkInfo(networkType =connectionType, urlUsage = label)
     }
 
 

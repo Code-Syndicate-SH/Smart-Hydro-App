@@ -5,6 +5,7 @@ import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
+import org.smartroots.data.model.NetworkInfo
 import org.smartroots.data.module.NetworkConfig
 /**
  * @author Shravan Ramjathan
@@ -15,7 +16,7 @@ class NetworkConfigRepositoryImpl(val networkConfig: NetworkConfig): NetworkConf
         return networkConfig.checkConnectionStatus()
     }
 
-    override suspend fun checkNetworkInfo(): Map<NetworkConnection, String> {
+    override suspend fun checkNetworkInfo(): NetworkInfo {
         return networkConfig.checkNetworkInfo()
     }
 
