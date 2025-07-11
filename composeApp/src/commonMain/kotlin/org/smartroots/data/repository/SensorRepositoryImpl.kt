@@ -7,60 +7,27 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.smartroots.data.model.Sensor
 import org.smartroots.data.service.SensorAPI
+import org.smartroots.data.service.SensorAPIImpl
+import org.smartroots.data.service.SensorComponent
 
 /**
  *  @author Shravan Ramjatha
  */
-class SensorRepositoryImpl(val baseURL: String, val sensorAPI: SensorAPI): SensorRepository {
+class SensorRepositoryImpl( val sensorAPI: SensorAPI): SensorRepository {
 
-    override suspend fun fetchSensorReading(): Sensor {
-        return sensorAPI.getSensorReading()
+    override suspend fun fetchSensorReaading(baseURL: String): Sensor {
+        return sensorAPI.getSensorReading(baseURL)
     }
 
-    override suspend fun fetchHistoricSensorReadings(): List<Sensor> {
-        return sensorAPI.getHistoricSensorReading()
+    override suspend fun fetchHistoricSensorReadings(baseURL: String): List<Sensor> {
+        return sensorAPI.getHistoricSensorReading(baseURL)
     }
 
-    override suspend fun toggleLight(): HttpResponse {
-        return sensorAPI.toggleLight()
+    override suspend fun toggleComponent(baseURL: String,sensorComponent: SensorComponent): HttpResponse {
+        return sensorAPI.toggleComponent(baseURL,sensorComponent)
     }
 
-    override suspend fun toggleFan(): HttpResponse {
-        return sensorAPI.toggleFan()
-    }
-
-    override suspend fun toggleExtractor(): HttpResponse {
-        return sensorAPI.toggleExtractor()
-    }
-
-    override suspend fun togglePump(): HttpResponse {
-        return sensorAPI.togglePump()
-    }
-
-    override suspend fun ec(): HttpResponse {
-        return sensorAPI.ec()
-    }
-
-    override suspend fun ecUp(): HttpResponse {
-        return sensorAPI.ecUp()
-    }
-
-    override suspend fun ecDown(): HttpResponse {
-        return sensorAPI.ecDown()
-    }
-
-    override suspend fun pH(): HttpResponse {
-        return sensorAPI.pH()
-    }
-
-    override suspend fun pHUp(): HttpResponse {
-        return sensorAPI.pHUp()
-    }
-
-    override suspend fun pHDown(): HttpResponse {
-        return sensorAPI.pHDown()
-    }
 }
 val sensorRepositoryModule = module{
-   factory<SensorRepository> {params-> SensorRepositoryImpl(baseURL =params.get(), get()) }
+   factory<SensorRepository> { SensorRepositoryImpl(get()) }
 }

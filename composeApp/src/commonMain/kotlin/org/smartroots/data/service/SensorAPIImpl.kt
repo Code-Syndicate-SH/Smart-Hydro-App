@@ -31,8 +31,6 @@ class SensorAPIImpl(
         return tentClient.get("$baseURL/${sensorComponent.name}").body()
     }
 
-
-
 }
 
 val SensorReadingModule = module {
