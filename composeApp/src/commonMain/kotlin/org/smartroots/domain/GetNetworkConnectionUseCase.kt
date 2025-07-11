@@ -16,7 +16,7 @@ class GetNetworkConnectionUseCase(
         val result =  when (networkInfo.urlUsage) {
             "Remote" -> remoteURL
             "Local"-> localURL
-         else -> "Unknown"   // throw an error here, make a custom error, also just make sure to verify if it recognises, bluetooth and wifi at the same time
+         else -> "Unknown"
         }
         return result
     }
