@@ -4,11 +4,11 @@ enum class SensorComponent(component:String) {
 
     FAN("fan"),
     EC("ec"),
-    ECUP("ecUp"),
-    ECDOWN("ecDown"),
+    EC_UP("ecUp"),
+    EC_DOWN("ecDown"),
     PH("pH"),
-    PHUP("pHUp"),
-    PHDOWN("pHDown"),
+    PH_UP("pHUp"),
+    PH_DOWN("pHDown"),
     LIGHT("light"),
     PUMP("pump")
 
