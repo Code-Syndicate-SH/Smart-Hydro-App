@@ -15,7 +15,7 @@ import org.smartroots.data.service.SensorComponent
  */
 class SensorRepositoryImpl( val sensorAPI: SensorAPI): SensorRepository {
 
-    override suspend fun fetchSensorReaading(baseURL: String): Sensor {
+    override suspend fun fetchSensorReading(baseURL: String): Sensor {
         return sensorAPI.getSensorReading(baseURL)
     }
 
