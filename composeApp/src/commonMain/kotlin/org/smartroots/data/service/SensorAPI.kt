@@ -6,38 +6,11 @@ import org.smartroots.data.model.Sensor
  * @author Shravan Ramjathan
  */
 interface SensorAPI {
-    suspend fun getSensorReading(): Sensor
-    suspend fun getHistoricSensorReading(): List<Sensor>
+    suspend fun getSensorReading(baseURL:String): Sensor
+    suspend fun getHistoricSensorReading(baseURL:String): List<Sensor>
 
-    //light
-    suspend fun toggleLight(): HttpResponse
+    suspend fun toggleComponent(baseURL:String,component: SensorComponent): HttpResponse
 
-    //fan
-    suspend fun toggleFan(): HttpResponse
-
-    //extract
-    suspend fun toggleExtractor(): HttpResponse
-
-    //pump
-    suspend fun togglePump(): HttpResponse
-
-    //ec
-    suspend fun ec(): HttpResponse
-
-    //ecUp
-    suspend fun ecUp(): HttpResponse
-
-    //ecDown
-    suspend fun ecDown(): HttpResponse
-
-    //ph
-    suspend fun pH(): HttpResponse
-
-    //phUp
-    suspend fun pHUp(): HttpResponse
-
-    //phDown
-    suspend fun pHDown(): HttpResponse
 
 
 }
