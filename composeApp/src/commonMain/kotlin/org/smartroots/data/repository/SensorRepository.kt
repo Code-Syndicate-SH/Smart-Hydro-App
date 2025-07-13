@@ -8,11 +8,11 @@ import org.smartroots.data.service.SensorComponent
  * @author Shravan Ramjathan
  */
 interface SensorRepository {
-    suspend fun fetchSensorReading(baseURL: String): Sensor
-    suspend fun fetchHistoricSensorReadings(baseURL: String): List<Sensor>
+    suspend fun fetchSensorReading(): Sensor
+    suspend fun fetchHistoricSensorReadings(): List<Sensor>
 
     //light
-    suspend fun toggleComponent(baseURL: String,sensorComponent: SensorComponent): HttpResponse
+    suspend fun toggleComponent(sensorComponent: SensorComponent): HttpResponse
 
     //fan
 

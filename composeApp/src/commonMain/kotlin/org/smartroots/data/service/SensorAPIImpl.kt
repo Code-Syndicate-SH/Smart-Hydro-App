@@ -16,26 +16,28 @@ import org.smartroots.data.module.NetworkConfig
  */
 class SensorAPIImpl(
     val tentClient: HttpClient,
+    val baseURL: String
 ) : SensorAPI {
 
 
-    override suspend fun getSensorReading(baseURL: String): Sensor {
+    override suspend fun getSensorReading(): Sensor {
         return tentClient.get("$baseURL/r/n/r/n").body()
     }
 
-    override suspend fun getHistoricSensorReading(baseURL: String): List<Sensor> {
+    override suspend fun getHistoricSensorReading(): List<Sensor> {
         return tentClient.get("$baseURL/historicData").body()
     }
 
-    override suspend fun toggleComponent(baseURL: String,sensorComponent: SensorComponent): HttpResponse {
-        return tentClient.get("$baseURL/${sensorComponent.name}").body()
+    override suspend fun toggleComponent(sensorComponent: SensorComponent): HttpResponse {
+        return tentClient.get("$baseURL/${sensorComponent.componentEndpoint}").body()
     }
 
 }
 
 val SensorReadingModule = module {
-    single<SensorAPI> { params ->
+    factory<SensorAPI> { (baseURL:String) ->
         SensorAPIImpl(
+            baseURL = baseURL,
             tentClient = get(),
 
         )

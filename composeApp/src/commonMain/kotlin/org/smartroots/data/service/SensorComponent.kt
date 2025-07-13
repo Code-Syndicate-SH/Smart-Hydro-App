@@ -1,8 +1,8 @@
 package org.smartroots.data.service
 
-enum class SensorComponent(component:String) {
+enum class SensorComponent( val componentEndpoint:String) {
 
-    FAN("fan"),
+    FAN("fan"), // this relates to humidity
     EC("ec"),
     EC_UP("ecUp"),
     EC_DOWN("ecDown"),
