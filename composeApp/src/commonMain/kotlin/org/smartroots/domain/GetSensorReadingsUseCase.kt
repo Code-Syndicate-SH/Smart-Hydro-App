@@ -9,7 +9,7 @@ import org.smartroots.data.repository.SensorRepository
 
 class GetSensorReadingsUseCase(private val getNetworkConnectionUseCase: GetNetworkConnectionUseCase) :
     KoinComponent {
-    suspend operator fun invoke(): Sensor {
+    suspend operator fun invoke(): Map<String,String> {
         val baseURL: String = getNetworkConnectionUseCase()
         val sensorRepository: SensorRepository =
             getKoin().get<SensorRepository> { parameterSetOf(baseURL) }
@@ -19,7 +19,7 @@ class GetSensorReadingsUseCase(private val getNetworkConnectionUseCase: GetNetwo
 
     }
 
-    private fun validateSensorReading(sensor: Sensor): Sensor {
+    private fun validateSensorReading(sensor: Sensor): Map<String,String> {
         val mappedSensorReadings = sensor.toMap()
         var nullReadings = 0
         var validReadings = true
@@ -29,7 +29,7 @@ class GetSensorReadingsUseCase(private val getNetworkConnectionUseCase: GetNetwo
            nullReadings++
           }
         }
-        return if(nullReadings<mappedSensorReadings.count()) sensor else Sensor()
+        return if(nullReadings<mappedSensorReadings.count()) mappedSensorReadings else Sensor().toMap()
 
 
     }
