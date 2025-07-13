@@ -8,15 +8,15 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Sensor(
     @SerialName("EC")
-    val eC: String = "",
+    val eC: String = "Unavailable Data",
     @SerialName("Humidity")
-    val humidity: String = "",
+    val humidity: String = "Unavailable Data",
     @SerialName("Light")
-    val light: String = "",
+    val light: String = "Unavailable Data",
     @SerialName("PH")
-    val pH: String = "",
+    val pH: String = "Unavailable Data",
     @SerialName("Temperature")
-    val temperature: String = "",
+    val temperature: String = "Unavailable Data",
     @SerialName("FlowRate")
-    val flowRate: String =""
+    val flowRate: String ="Unavailable Data"
 )
