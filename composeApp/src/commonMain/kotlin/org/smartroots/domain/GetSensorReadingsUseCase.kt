@@ -9,27 +9,32 @@ import org.smartroots.data.repository.SensorRepository
 
 class GetSensorReadingsUseCase(private val getNetworkConnectionUseCase: GetNetworkConnectionUseCase) :
     KoinComponent {
-    suspend operator fun invoke(): Map<String,String> {
-        val baseURL: String = getNetworkConnectionUseCase()
+    suspend operator fun invoke(): Map<String, String> {
+        var baseURL: String?
+        try {
+            baseURL = getNetworkConnectionUseCase()
+        } catch (e: NullPointerException) {
+            throw NullPointerException("System is not connected to a network.")
+        }
         val sensorRepository: SensorRepository =
             getKoin().get<SensorRepository> { parameterSetOf(baseURL) }
-       var sensorReadings: Sensor =  sensorRepository.fetchSensorReading()
-        val mappedReadings= validateSensorReading(sensorReadings)
+        var sensorReadings: Sensor = sensorRepository.fetchSensorReading()
+        val mappedReadings = validateSensorReading(sensorReadings)
         return mappedReadings
 
     }
 
-    private fun validateSensorReading(sensor: Sensor): Map<String,String> {
+    private fun validateSensorReading(sensor: Sensor): Map<String, String> {
         val mappedSensorReadings = sensor.toMap()
         var nullReadings = 0
         var validReadings = true
         for ((key, value: String) in mappedSensorReadings) {
-          if(value.isEmpty() || value.isBlank()){
-          validReadings= false
-           nullReadings++
-          }
+            if (value.isEmpty() || value.isBlank()) {
+                validReadings = false
+                nullReadings++
+            }
         }
-        return if(nullReadings<mappedSensorReadings.count()) mappedSensorReadings else Sensor().toMap()
+        return if (nullReadings < mappedSensorReadings.count()) mappedSensorReadings else Sensor().toMap()
 
 
     }
