@@ -1,26 +1,24 @@
 package org.smartroots.data.repository
 
 import dev.tmapps.konnection.NetworkConnection
-import org.koin.core.module.dsl.bind
-import org.koin.core.module.dsl.factoryOf
-import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import org.smartroots.data.model.NetworkInfo
-import org.smartroots.data.module.NetworkConfig
+import org.smartroots.data.service.NetworkConfig
+
 /**
  * @author Shravan Ramjathan
  */
-class NetworkConfigRepositoryImpl(val networkConfig: NetworkConfig): NetworkConfigRepository{
+class NetworkConfigRepositoryImpl(val networkConfig: NetworkConfig) : NetworkConfigRepository {
 
-   override fun checkConnectionStatus(): NetworkConnection?{
-        return networkConfig.checkConnectionStatus()
+    override fun checkConnectionStatus(): NetworkConnection? {
+        return networkConfig.checkNetworkConnectionStatus()
     }
 
-    override suspend fun checkNetworkInfo(): NetworkInfo {
-        return networkConfig.checkNetworkInfo()
+    override suspend fun currentIPV4Address(): String? {
+        return networkConfig.currentIPV4Address()
     }
 
 }
+
 val networkRepositoryModule = module {
-    factory<NetworkConfigRepository>{ NetworkConfigRepositoryImpl(get()) }
+    factory<NetworkConfigRepository> { NetworkConfigRepositoryImpl(get()) }
 }
