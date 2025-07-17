@@ -13,7 +13,7 @@ plugins {
     alias(libs.plugins.composeHotReload)
     alias(libs.plugins.ksp)
     alias(libs.plugins.jetbrains.kotlin.serialization)
-
+    alias(libs.plugins.room)
 
     /*   id("org.jetbrains.kotlin.plugin.serialization") version "2.2.0"
        id("de.jensklingenberg.ktorfit") version "2.5.2"
@@ -66,7 +66,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation(libs.androidx.room.runtime)
+            implementation(libs.room.runtime)
             implementation(libs.jetbrains.compose.navigation)
 
             // koin dependancies
@@ -99,16 +99,20 @@ kotlin {
 
 }
 dependencies{
-    add("kspCommonMainMetadata", libs.androidx.room.compiler)
-    add("kspAndroid", libs.androidx.room.compiler)
-    add("kspIosX64", libs.androidx.room.compiler)
-    add("kspIosArm64", libs.androidx.room.compiler)
-    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+   add("kspCommonMainMetadata", libs.room.runtime)
+    add("kspAndroid", libs.room.compiler)
+    add("kspIosX64", libs.room.compiler)
+  add("kspIosArm64", libs.room.compiler)
+    add("kspIosSimulatorArm64", libs.room.compiler)
 }
 dependencies{
     implementation(libs.koin.core)
+ ksp(libs.room.compiler)
 }
 
+room {
+    schemaDirectory("$projectDir/schemas")
+}
 android {
     namespace = "org.smartroots"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
