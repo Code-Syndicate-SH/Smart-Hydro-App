@@ -12,6 +12,9 @@ import org.smartroots.data.model.Sensor
 import org.smartroots.data.service.SensorAPIImpl
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.builtins.serializer
+
 
 class SensorApiTest {
 
@@ -60,4 +63,155 @@ class SensorApiTest {
         assertEquals("24", result.temperature)
         assertEquals("2.5", result.flowRate)
     }
+
+    @Test
+    fun testGetHistoricSensorReading_returnsSensorList() = runTest {
+        val sensors = listOf(
+            Sensor(eC = "2.1", humidity = "65", light = "250", pH = "6.7", temperature = "24", flowRate = "1.0"),
+            Sensor(eC = "2.3", humidity = "63", light = "240", pH = "6.8", temperature = "25", flowRate = "1.1")
+        )
+        val jsonResponse = Json.encodeToString(ListSerializer(Sensor.serializer()), sensors)
+
+        val mockEngine = MockEngine { request ->
+            respond(jsonResponse, HttpStatusCode.OK, headersOf(HttpHeaders.ContentType, "application/json"))
+        }
+
+        val client = HttpClient(mockEngine) {
+            install(ContentNegotiation) {
+                json(Json { ignoreUnknownKeys = true })
+            }
+        }
+
+        val api = SensorAPIImpl(client, "http://localhost")
+        val result = api.getHistoricSensorReading()
+
+        assertEquals(sensors, result)
+    }
+    @Test
+    fun testToggleLight_returnsOk() = runTest {
+        val mockEngine = MockEngine { request ->
+            respond("Light toggled", HttpStatusCode.OK)
+        }
+
+        val client = HttpClient(mockEngine)
+        val api = SensorAPIImpl(client, "http://localhost")
+        val response = api.toggleLight()
+
+        assertEquals(HttpStatusCode.OK, response.status)
+    }
+    @Test
+    fun testToggleFan_returnsOk() = runTest {
+        val client = HttpClient(MockEngine) {
+            engine {
+                addHandler {
+                    respond("Fan toggled", HttpStatusCode.OK)
+                }
+            }
+        }
+        val api = SensorAPIImpl(client, "http://localhost")
+        val response = api.toggleFan()
+        assertEquals(HttpStatusCode.OK, response.status)
+    }
+
+    @Test
+    fun testToggleExtractor_returnsOk() = runTest {
+        val client = HttpClient(MockEngine) {
+            engine {
+                addHandler {
+                    respond("Extractor toggled", HttpStatusCode.OK)
+                }
+            }
+        }
+        val api = SensorAPIImpl(client, "http://localhost")
+        val response = api.toggleExtractor()
+        assertEquals(HttpStatusCode.OK, response.status)
+    }
+
+    @Test
+    fun testTogglePump_returnsOk() = runTest {
+        val client = HttpClient(MockEngine) {
+            engine {
+                addHandler {
+                    respond("Pump toggled", HttpStatusCode.OK)
+                }
+            }
+        }
+        val api = SensorAPIImpl(client, "http://localhost")
+        val response = api.togglePump()
+        assertEquals(HttpStatusCode.OK, response.status)
+    }
+
+    @Test
+    fun testEc_returnsOk() = runTest {
+        val client = HttpClient(MockEngine) {
+            engine {
+                addHandler {
+                    respond("EC read", HttpStatusCode.OK)
+                }
+            }
+        }
+        val api = SensorAPIImpl(client, "http://localhost")
+        val response = api.ec()
+        assertEquals(HttpStatusCode.OK, response.status)
+    }
+
+    @Test
+    fun testEcUp_returnsOk() = runTest {
+        val client = HttpClient(MockEngine) {
+            engine {
+                addHandler {
+                    respond("EC up", HttpStatusCode.OK)
+                }
+            }
+        }
+        val api = SensorAPIImpl(client, "http://localhost")
+        val response = api.ecUp()
+        assertEquals(HttpStatusCode.OK, response.status)
+    }
+
+    @Test
+    fun testEcDown_returnsOk() = runTest {
+        val client = HttpClient(MockEngine) {
+            engine {
+                addHandler {
+                    respond("EC down", HttpStatusCode.OK)
+                }
+            }
+        }
+        val api = SensorAPIImpl(client, "http://localhost")
+        val response = api.ecDown()
+        assertEquals(HttpStatusCode.OK, response.status)
+    }
+
+    @Test
+    fun testPh_returnsOk() = runTest {
+        val client = HttpClient(MockEngine) {
+            engine {
+                addHandler {
+                    respond("pH read", HttpStatusCode.OK)
+                }
+            }
+        }
+        val api = SensorAPIImpl(client, "http://localhost")
+        val response = api.pH()
+        assertEquals(HttpStatusCode.OK, response.status)
+    }
+
+    @Test
+    fun testPhUp_returnsOk() = runTest {
+        val client = HttpClient(MockEngine) {
+            engine {
+                addHandler {
+                    respond("pH up", HttpStatusCode.OK)
+                }
+            }
+        }
+        val api = SensorAPIImpl(client, "http://localhost")
+        val response = api.pHUp()
+        assertEquals(HttpStatusCode.OK, response.status)
+    }
+
+
+
+
 }
