@@ -9,7 +9,7 @@ import org.koin.dsl.module
  * @author Shravan Ramjathan
  */
 fun createHttpClient(): HttpClient{
-   return HttpClient(){
+   return HttpClient{
         install(ContentNegotiation){
             json(Json {
                 prettyPrint = true

@@ -33,11 +33,11 @@ class NetworkConfig() {
     }
 
 
-    private fun determineNetworkLabel(ipv4: String): String {
+    private fun determineNetworkLabel(ipv4: String, connectionType:NetworkConnection): String {
         return when {
 
-            ipv4.startsWith("192.168.8.") -> "Local"
-            ipv4.startsWith("192.168.1.") -> "Remote"
+            ipv4.startsWith("192.168.8.") && connectionType==NetworkConnection.WIFI-> "Local"
+                connectionType== NetworkConnection.WIFI || connectionType== NetworkConnection.MOBILE -> "Remote"
             else -> "Unknown"
         }
     }
@@ -58,7 +58,7 @@ class NetworkConfig() {
         if (ipv4Address == null) {
             return NetworkInfo()
         }
-        val label = determineNetworkLabel(ipv4Address)
+        val label = determineNetworkLabel(ipv4Address, connectionType)
         if (label == "Unknown") {
           return NetworkInfo()
         }
