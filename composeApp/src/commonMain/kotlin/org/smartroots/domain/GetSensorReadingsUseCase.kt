@@ -10,11 +10,16 @@ import org.smartroots.data.repository.SensorRepository
 class GetSensorReadingsUseCase(private val getNetworkConnectionUseCase: GetNetworkConnectionUseCase) :
     KoinComponent {
     suspend operator fun invoke(): Map<String, Double> {
-        val baseURL: String = getNetworkConnectionUseCase()
+        var baseURL: String?
+        try {
+            baseURL = getNetworkConnectionUseCase()
+        } catch (e: NullPointerException) {
+            throw NullPointerException("System is not connected to a network.")
+        }
         val sensorRepository: SensorRepository =
             getKoin().get<SensorRepository> { parameterSetOf(baseURL) }
-       var sensorReadings: Sensor =  sensorRepository.fetchSensorReading()
-        val mappedReadings= validateSensorReading(sensorReadings)
+        var sensorReadings: Sensor = sensorRepository.fetchSensorReading()
+        val mappedReadings = validateSensorReading(sensorReadings)
         return mappedReadings
 
     }
@@ -24,11 +29,11 @@ class GetSensorReadingsUseCase(private val getNetworkConnectionUseCase: GetNetwo
         val validSensorReadings: MutableMap<String, Double> = mutableMapOf()
         var nullReadings = 0
         for ((key:String, value) in mappedSensorReadings.entries) {
-           if( value.toDoubleOrNull()!=null){
-               validSensorReadings.put(key, value.toDouble())
-           }else{
-               validSensorReadings.put(key, -999.9)
-           }
+            if( value.toDoubleOrNull()!=null){
+                validSensorReadings.put(key, value.toDouble())
+            }else{
+                validSensorReadings.put(key, -999.9)
+            }
         }
         return if(nullReadings<mappedSensorReadings.count()) validSensorReadings else emptyMap()
 
