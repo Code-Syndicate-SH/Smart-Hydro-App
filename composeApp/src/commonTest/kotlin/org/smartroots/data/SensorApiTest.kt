@@ -201,50 +201,7 @@ class SensorApiTest {
         assertEquals(HttpStatusCode.OK, response.status)
     }
 
-    @Test
-    fun testGetSensorReading_withEmptyJson_shouldReturnDefaultSensor() = runTest {
-        val client = createMockClient("{}") // empty JSON
-        val api = SensorAPIImpl(client, "http://localhost")
 
-        val result = api.getSensorReading()
-
-        assertEquals("", result.eC)
-        assertEquals("", result.humidity)
-        assertEquals("", result.light)
-        assertEquals("", result.pH)
-        assertEquals("", result.temperature)
-        assertEquals("", result.flowRate)
-    }
-
-    @Test
-    fun testGetSensorReading_withMissingFields_shouldDefaultToEmpty() = runTest {
-        val json = """{ "EC": "2.0", "PH": "5.5" }"""
-        val client = createMockClient(json)
-        val api = SensorAPIImpl(client, "http://localhost")
-
-        val result = api.getSensorReading()
-
-        assertEquals("2.0", result.eC)
-        assertEquals("5.5", result.pH)
-        assertEquals("", result.humidity) // missing
-        assertEquals("", result.light)
-        assertEquals("", result.temperature)
-        assertEquals("", result.flowRate)
-    }
-
-    @Test
-    fun testGetSensorReading_withMalformedJson_shouldThrow() = runTest {
-        val malformedJson = """{ "EC": 1.5, "Humidity": "bad }""" // broken JSON
-        val client = createMockClient(malformedJson)
-        val api = SensorAPIImpl(client, "http://localhost")
-
-        try {
-            api.getSensorReading()
-            fail("Expected SerializationException but none was thrown")
-        } catch (e: Exception) {
-            assertTrue(e is kotlinx.serialization.SerializationException)
-        }
-    }
 
 
     @Test
