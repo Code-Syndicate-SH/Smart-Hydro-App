@@ -11,7 +11,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
-    // plugins
+    alias(libs.plugins.ksp)
     alias(libs.plugins.jetbrains.kotlin.serialization)
 
 
@@ -66,7 +66,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtimeCompose)
-
+            implementation(libs.androidx.room.runtime)
             implementation(libs.jetbrains.compose.navigation)
 
             // koin dependancies
@@ -104,6 +104,13 @@ kotlin {
 
 }
 dependencies{
+    add("kspCommonMainMetadata", libs.androidx.room.compiler)
+    add("kspAndroid", libs.androidx.room.compiler)
+    add("kspIosX64", libs.androidx.room.compiler)
+    add("kspIosArm64", libs.androidx.room.compiler)
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+}
+dependencies{
     implementation(libs.koin.core)
 }
 
@@ -127,7 +134,7 @@ android {
     }
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
         }
     }
     compileOptions {
