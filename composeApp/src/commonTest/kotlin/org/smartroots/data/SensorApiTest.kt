@@ -14,6 +14,10 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
+import org.smartroots.data.service.SensorComponent
+import kotlin.test.assertTrue
+import kotlin.test.fail
+
 
 
 class SensorApiTest {
@@ -95,7 +99,7 @@ class SensorApiTest {
 
         val client = HttpClient(mockEngine)
         val api = SensorAPIImpl(client, "http://localhost")
-        val response = api.toggleLight()
+        val response = api.toggleComponent(SensorComponent.LIGHT)
 
         assertEquals(HttpStatusCode.OK, response.status)
     }
@@ -109,21 +113,7 @@ class SensorApiTest {
             }
         }
         val api = SensorAPIImpl(client, "http://localhost")
-        val response = api.toggleFan()
-        assertEquals(HttpStatusCode.OK, response.status)
-    }
-
-    @Test
-    fun testToggleExtractor_returnsOk() = runTest {
-        val client = HttpClient(MockEngine) {
-            engine {
-                addHandler {
-                    respond("Extractor toggled", HttpStatusCode.OK)
-                }
-            }
-        }
-        val api = SensorAPIImpl(client, "http://localhost")
-        val response = api.toggleExtractor()
+        val response = api.toggleComponent(SensorComponent.FAN)
         assertEquals(HttpStatusCode.OK, response.status)
     }
 
@@ -137,7 +127,7 @@ class SensorApiTest {
             }
         }
         val api = SensorAPIImpl(client, "http://localhost")
-        val response = api.togglePump()
+        val response = api.toggleComponent(SensorComponent.PUMP)
         assertEquals(HttpStatusCode.OK, response.status)
     }
 
@@ -151,7 +141,7 @@ class SensorApiTest {
             }
         }
         val api = SensorAPIImpl(client, "http://localhost")
-        val response = api.ec()
+        val response = api.toggleComponent(SensorComponent.EC)
         assertEquals(HttpStatusCode.OK, response.status)
     }
 
@@ -165,7 +155,7 @@ class SensorApiTest {
             }
         }
         val api = SensorAPIImpl(client, "http://localhost")
-        val response = api.ecUp()
+        val response = api.toggleComponent(SensorComponent.EC_UP)
         assertEquals(HttpStatusCode.OK, response.status)
     }
 
@@ -179,7 +169,7 @@ class SensorApiTest {
             }
         }
         val api = SensorAPIImpl(client, "http://localhost")
-        val response = api.ecDown()
+        val response = api.toggleComponent(SensorComponent.EC_DOWN)
         assertEquals(HttpStatusCode.OK, response.status)
     }
 
@@ -193,7 +183,7 @@ class SensorApiTest {
             }
         }
         val api = SensorAPIImpl(client, "http://localhost")
-        val response = api.pH()
+        val response = api.toggleComponent(SensorComponent.PH)
         assertEquals(HttpStatusCode.OK, response.status)
     }
 
@@ -207,10 +197,81 @@ class SensorApiTest {
             }
         }
         val api = SensorAPIImpl(client, "http://localhost")
-        val response = api.pHUp()
+        val response = api.toggleComponent(SensorComponent.PH_UP)
         assertEquals(HttpStatusCode.OK, response.status)
     }
 
+    @Test
+    fun testGetSensorReading_withEmptyJson_shouldReturnDefaultSensor() = runTest {
+        val client = createMockClient("{}") // empty JSON
+        val api = SensorAPIImpl(client, "http://localhost")
+
+        val result = api.getSensorReading()
+
+        assertEquals("", result.eC)
+        assertEquals("", result.humidity)
+        assertEquals("", result.light)
+        assertEquals("", result.pH)
+        assertEquals("", result.temperature)
+        assertEquals("", result.flowRate)
+    }
+
+    @Test
+    fun testGetSensorReading_withMissingFields_shouldDefaultToEmpty() = runTest {
+        val json = """{ "EC": "2.0", "PH": "5.5" }"""
+        val client = createMockClient(json)
+        val api = SensorAPIImpl(client, "http://localhost")
+
+        val result = api.getSensorReading()
+
+        assertEquals("2.0", result.eC)
+        assertEquals("5.5", result.pH)
+        assertEquals("", result.humidity) // missing
+        assertEquals("", result.light)
+        assertEquals("", result.temperature)
+        assertEquals("", result.flowRate)
+    }
+
+    @Test
+    fun testGetSensorReading_withMalformedJson_shouldThrow() = runTest {
+        val malformedJson = """{ "EC": 1.5, "Humidity": "bad }""" // broken JSON
+        val client = createMockClient(malformedJson)
+        val api = SensorAPIImpl(client, "http://localhost")
+
+        try {
+            api.getSensorReading()
+            fail("Expected SerializationException but none was thrown")
+        } catch (e: Exception) {
+            assertTrue(e is kotlinx.serialization.SerializationException)
+        }
+    }
+
+
+    @Test
+    fun testToggleLight_withServerError_shouldReturnErrorStatus() = runTest {
+        val client = HttpClient(MockEngine) {
+            engine {
+                addHandler {
+                    respond("Internal Server Error", HttpStatusCode.InternalServerError)
+                }
+            }
+        }
+        val api = SensorAPIImpl(client, "http://localhost")
+        val response = api.toggleComponent(SensorComponent.LIGHT)
+
+        assertEquals(HttpStatusCode.InternalServerError, response.status)
+    }
+
+    @Test
+    fun testGetHistoricSensorReading_withEmptyList_shouldReturnEmpty() = runTest {
+        val json = "[]"
+        val client = createMockClient(json)
+        val api = SensorAPIImpl(client, "http://localhost")
+
+        val result = api.getHistoricSensorReading()
+
+        assertEquals(0, result.size)
+    }
 
 
 
