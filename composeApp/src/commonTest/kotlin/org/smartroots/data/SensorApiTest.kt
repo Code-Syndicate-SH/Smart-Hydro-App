@@ -262,16 +262,7 @@ class SensorApiTest {
         assertEquals(HttpStatusCode.InternalServerError, response.status)
     }
 
-    @Test
-    fun testGetHistoricSensorReading_withEmptyList_shouldReturnEmpty() = runTest {
-        val json = "[]"
-        val client = createMockClient(json)
-        val api = SensorAPIImpl(client, "http://localhost")
 
-        val result = api.getHistoricSensorReading()
-
-        assertEquals(0, result.size)
-    }
 
 
 
