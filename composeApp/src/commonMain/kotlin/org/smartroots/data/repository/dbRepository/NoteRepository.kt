@@ -1,4 +1,4 @@
-package org.smartroots.data.repository
+package org.smartroots.data.repository.dbRepository
 
 import org.smartroots.data.database.entity.NoteEntity
 

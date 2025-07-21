@@ -1,9 +1,9 @@
-package org.smartroots.data.repository
+package org.smartroots.data.repository.dbRepository
 
 import org.smartroots.data.database.AppDatabase
 import org.smartroots.data.database.entity.NoteEntity
 
-class LocalNoteDbRepository(private val appDatabase: AppDatabase): NoteRepository {
+class NoteLocalDbRepository(private val appDatabase: AppDatabase): NoteRepository {
     override suspend fun insert(note: NoteEntity) {
         return appDatabase.getNoteDao().insert(note)
     }
