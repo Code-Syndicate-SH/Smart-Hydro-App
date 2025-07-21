@@ -10,6 +10,6 @@ interface SensorDao {
     @Insert
     suspend fun insert(sensorActivityReading: SensorActivityReading)
 
-    @Query("SELECT * FROM sensor WHERE sensor.isOn =:isOn ")
+    @Query("SELECT * FROM sensor_activity WHERE sensor_activity.isOn =:isOn ")
     suspend fun fetchAllOn(isOn: Boolean = true)
 }
