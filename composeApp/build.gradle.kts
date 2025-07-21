@@ -38,6 +38,8 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
+            // Required when using NativeSQLiteDriver
+            linkerOpts.add("-lsqlite3")
         }
     }
 
@@ -84,6 +86,10 @@ kotlin {
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
             implementation(libs.konnection.lib)
+            implementation(libs.sqlite.bundled)
+
+            // date time
+            implementation(libs.date.time)
         }
 
         commonTest.dependencies {
@@ -107,7 +113,9 @@ dependencies{
 }
 dependencies{
     implementation(libs.koin.core)
- ksp(libs.room.compiler)
+}
+dependencies{
+    ksp(libs.room.compiler)
 }
 
 room {

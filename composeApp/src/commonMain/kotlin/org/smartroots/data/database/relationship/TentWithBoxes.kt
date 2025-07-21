@@ -1,9 +1,9 @@
-package org.smartroots.data.dao
+package org.smartroots.data.relationships
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import org.smartroots.data.entity.BoxEntity
-import org.smartroots.data.entity.TentEntity
+import org.smartroots.data.database.entity.BoxEntity
+import org.smartroots.data.database.entity.TentEntity
 
 data class TentWithBoxes(
     @Embedded val tent: TentEntity,

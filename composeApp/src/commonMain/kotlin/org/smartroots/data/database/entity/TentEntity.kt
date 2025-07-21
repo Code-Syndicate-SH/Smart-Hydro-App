@@ -1,8 +1,8 @@
-package org.smartroots.data.entity
+package org.smartroots.data.database.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-@Entity
+@Entity(tableName = "tent")
 data class TentEntity(
     @PrimaryKey (autoGenerate = true)
     val tentId:Int, // add on to this
