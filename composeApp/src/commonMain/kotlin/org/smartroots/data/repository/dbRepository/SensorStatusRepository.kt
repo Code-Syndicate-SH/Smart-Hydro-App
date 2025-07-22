@@ -3,6 +3,8 @@ package org.smartroots.data.repository.dbRepository
 import org.smartroots.data.database.entity.SensorActivityReading
 
 interface SensorStatusRepository {
-    suspend fun insert(sensorActivityReading: SensorActivityReading)
-    suspend fun fetchAllOn(id:Int): List<SensorActivityReading>
+    suspend fun insert(sensorActivityReading: SensorActivityReading): Long
+    suspend fun getSensorStatus(id:Int): SensorActivityReading
+    suspend fun fetchAllOn(): List<SensorActivityReading>
+    suspend fun getAllSensorStatus():List<SensorActivityReading>
 }

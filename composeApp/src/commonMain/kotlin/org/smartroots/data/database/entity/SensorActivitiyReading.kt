@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "sensor_activity")
 data class SensorActivityReading(
-    @PrimaryKey (autoGenerate = true)  val sensorId:Int,
+    @PrimaryKey (autoGenerate = true)  val sensorId:Int = 0,
     val sensorName:String,
     val isOn:Boolean,
     val boxId:Int

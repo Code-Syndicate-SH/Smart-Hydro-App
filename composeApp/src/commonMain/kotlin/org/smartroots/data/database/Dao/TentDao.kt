@@ -9,7 +9,7 @@ import org.smartroots.data.relationships.TentWithBoxes
 @Dao
 interface TentDao {
     @Insert
-    suspend fun insert(item: TentEntity)
+    suspend fun insert(item: TentEntity): Long
 
     @Query("SELECT * FROM tent")
     suspend fun getAllTents(): List<TentEntity>

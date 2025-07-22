@@ -5,6 +5,10 @@ import org.smartroots.data.database.entity.TentEntity
 import org.smartroots.data.relationships.TentWithBoxes
 
 class TentRepositoryImpl(private val tentDao: TentDao) : TentRepository {
+    override suspend fun insertTent(tentEntity: TentEntity): Long {
+        return tentDao.insert(tentEntity)
+    }
+
     override suspend fun getTentWithName(name: String): TentEntity {
         return tentDao.getTentWithName(name)
     }

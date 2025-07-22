@@ -11,12 +11,11 @@ class GetNetworkConnectionUseCase(
 ) {
     suspend operator fun invoke(): NetworkUrl? {
         val currentIpv4Address: String? = networkConfigRepository.currentIPV4Address()
-        var url: String = ""
         if (currentIpv4Address == null) {
             throw NullPointerException("The system is not connected to a network.")
         }
 
-        url = when {
+        val url = when {
             currentIpv4Address.startsWith(ArduinoAccess.LOCAL_IP_MATCH.ip) -> localURL
             currentIpv4Address.startsWith(ArduinoAccess.REMOTE_IP_MATCH.ip) -> remoteURL
             else -> "Unknown"
