@@ -5,6 +5,6 @@ import org.smartroots.data.relationships.BoxWithSensors
 
 interface BoxRepository {
     suspend fun insert(box: BoxEntity)
-    suspend fun getAllBoxes():List<BoxEntity>
-    suspend fun getBoxWithSensors():List<BoxWithSensors>
+    suspend fun getAllBoxes(): List<BoxEntity>
+    suspend fun getBoxWithSensors(): List<BoxWithSensors>
 }

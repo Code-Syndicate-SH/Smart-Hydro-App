@@ -1,4 +1,5 @@
 package org.smartroots.data.database
+
 import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
@@ -26,13 +27,15 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun getNoteDao(): NoteDao
     abstract fun getSensorReadingActivity(): SensorDao
 }
+
 // The Room compiler generates the `actual` implementations.
 @Suppress("NO_ACTUAL_FOR_EXPECT")
 expect object AppDatabaseConstructor : RoomDatabaseConstructor<AppDatabase> {
     override fun initialize(): AppDatabase
 }
+
 fun getRoomDatabase(
-    builder: RoomDatabase.Builder<AppDatabase>
+    builder: RoomDatabase.Builder<AppDatabase>,
 ): AppDatabase {
     return builder
         .addMigrations()
@@ -41,3 +44,6 @@ fun getRoomDatabase(
         .setQueryCoroutineContext(Dispatchers.IO)
         .build()
 }
+
+
+

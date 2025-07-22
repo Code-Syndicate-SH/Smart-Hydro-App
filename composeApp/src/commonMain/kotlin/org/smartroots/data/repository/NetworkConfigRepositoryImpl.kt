@@ -1,7 +1,6 @@
 package org.smartroots.data.repository
 
 import dev.tmapps.konnection.NetworkConnection
-import org.koin.dsl.module
 import org.smartroots.data.service.NetworkConfig
 
 /**
@@ -19,6 +18,3 @@ class NetworkConfigRepositoryImpl(val networkConfig: NetworkConfig) : NetworkCon
 
 }
 
-val networkRepositoryModule = module {
-    factory<NetworkConfigRepository> { NetworkConfigRepositoryImpl(get()) }
-}

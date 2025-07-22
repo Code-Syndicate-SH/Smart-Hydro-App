@@ -8,5 +8,5 @@ interface TentRepository {
 
     suspend fun getAllTents(): List<TentEntity>
 
-    suspend fun getTentWithBoxes():List<TentWithBoxes>
+    suspend fun getTentWithBoxes(): List<TentWithBoxes>
 }

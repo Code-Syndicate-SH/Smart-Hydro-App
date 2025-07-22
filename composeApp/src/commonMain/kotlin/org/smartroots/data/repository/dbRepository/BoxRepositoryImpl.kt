@@ -1,19 +1,20 @@
 package org.smartroots.data.repository.dbRepository
 
-import org.smartroots.data.database.AppDatabase
+import org.smartroots.data.database.Dao.BoxDao
 import org.smartroots.data.database.entity.BoxEntity
 import org.smartroots.data.relationships.BoxWithSensors
 
-class BoxLocalDbRepository(private val appDatabase: AppDatabase): BoxRepository {
+// remote database set up
+class BoxRepositoryImpl(private val boxDao: BoxDao) : BoxRepository {
     override suspend fun insert(box: BoxEntity) {
-     return appDatabase.getBoxDao().insert(box)
+        return boxDao.insert(box)
     }
 
     override suspend fun getAllBoxes(): List<BoxEntity> {
-        return appDatabase.getBoxDao().getAllBoxes()
+        return boxDao.getAllBoxes()
     }
 
     override suspend fun getBoxWithSensors(): List<BoxWithSensors> {
-        return appDatabase.getBoxDao().getAllBoxSensors()
+        return boxDao.getAllBoxSensors()
     }
 }
