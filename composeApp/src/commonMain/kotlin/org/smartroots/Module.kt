@@ -1,5 +1,4 @@
 package org.smartroots
-
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
@@ -26,6 +25,7 @@ import org.smartroots.data.repository.dbRepository.TentRepository
 import org.smartroots.data.repository.dbRepository.TentRepositoryImpl
 import org.smartroots.data.service.SensorAPI
 import org.smartroots.domain.GetNetworkConnectionUseCase
+
 
 expect fun platformModule(): Module
 fun initKoin(config: KoinAppDeclaration? = null) =

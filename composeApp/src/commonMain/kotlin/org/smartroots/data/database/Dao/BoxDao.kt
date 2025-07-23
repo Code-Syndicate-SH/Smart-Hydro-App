@@ -3,7 +3,7 @@ package org.smartroots.data.database.Dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import coil3.util.Logger
+import androidx.room.Transaction
 import org.smartroots.data.database.entity.BoxEntity
 import org.smartroots.data.relationships.BoxWithSensors
 
@@ -14,9 +14,10 @@ interface BoxDao {
     suspend fun insert(box: BoxEntity): Long
 
     @Query("SELECT * FROM box")
-    suspend fun getAllBoxes():List<BoxEntity>
+    suspend fun getAllBoxes(): List<BoxEntity>
 
+    @Transaction
     @Query("SELECT * FROM box")
-    suspend fun getAllBoxSensors():List<BoxWithSensors>
+    suspend fun getAllBoxSensors(): List<BoxWithSensors>
 
 }

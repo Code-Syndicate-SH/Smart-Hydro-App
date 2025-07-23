@@ -14,11 +14,6 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.room)
-
-    /*   id("org.jetbrains.kotlin.plugin.serialization") version "2.2.0"
-       id("de.jensklingenberg.ktorfit") version "2.5.2"
-       id("com.google.devtools.ksp") version "2.2.0-2.0.2"*/
-
 }
 
 
@@ -104,18 +99,15 @@ kotlin {
     }
 
 }
+
 dependencies{
-   add("kspCommonMainMetadata", libs.room.runtime)
+
+    // KSP support for Room Compiler.
     add("kspAndroid", libs.room.compiler)
-    add("kspIosX64", libs.room.compiler)
-  add("kspIosArm64", libs.room.compiler)
     add("kspIosSimulatorArm64", libs.room.compiler)
-}
-dependencies{
-    implementation(libs.koin.core)
-}
-dependencies{
-    ksp(libs.room.compiler)
+    add("kspIosX64", libs.room.compiler)
+    add("kspIosArm64", libs.room.compiler)
+
 }
 
 room {
