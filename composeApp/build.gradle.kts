@@ -13,12 +13,7 @@ plugins {
     alias(libs.plugins.composeHotReload)
     alias(libs.plugins.ksp)
     alias(libs.plugins.jetbrains.kotlin.serialization)
-
-
-    /*   id("org.jetbrains.kotlin.plugin.serialization") version "2.2.0"
-       id("de.jensklingenberg.ktorfit") version "2.5.2"
-       id("com.google.devtools.ksp") version "2.2.0-2.0.2"*/
-
+    alias(libs.plugins.room)
 }
 
 
@@ -38,6 +33,8 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
+            // Required when using NativeSQLiteDriver
+            linkerOpts.add("-lsqlite3")
         }
     }
 
@@ -66,7 +63,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation(libs.androidx.room.runtime)
+            implementation(libs.room.runtime)
             implementation(libs.jetbrains.compose.navigation)
 
             // koin dependancies
@@ -84,6 +81,10 @@ kotlin {
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
             implementation(libs.konnection.lib)
+            implementation(libs.sqlite.bundled)
+
+            // date time
+            implementation(libs.date.time)
         }
 
         commonTest.dependencies {
@@ -98,17 +99,20 @@ kotlin {
     }
 
 }
+
 dependencies{
-    add("kspCommonMainMetadata", libs.androidx.room.compiler)
-    add("kspAndroid", libs.androidx.room.compiler)
-    add("kspIosX64", libs.androidx.room.compiler)
-    add("kspIosArm64", libs.androidx.room.compiler)
-    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
-}
-dependencies{
-    implementation(libs.koin.core)
+
+    // KSP support for Room Compiler.
+    add("kspAndroid", libs.room.compiler)
+    add("kspIosSimulatorArm64", libs.room.compiler)
+    add("kspIosX64", libs.room.compiler)
+    add("kspIosArm64", libs.room.compiler)
+
 }
 
+room {
+    schemaDirectory("$projectDir/schemas")
+}
 android {
     namespace = "org.smartroots"
     compileSdk = libs.versions.android.compileSdk.get().toInt()

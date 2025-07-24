@@ -5,8 +5,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import org.koin.core.module.dsl.singleOf
-import org.koin.dsl.module
 import org.smartroots.data.model.NetworkConfigState
 
 /**
@@ -30,6 +28,3 @@ class NetworkConfig() {
 
 }
 
-val networkConfigModule = module {
-    singleOf(::NetworkConfig)
-}
