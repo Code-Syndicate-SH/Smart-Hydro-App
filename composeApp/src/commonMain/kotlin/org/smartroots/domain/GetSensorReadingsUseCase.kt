@@ -1,13 +1,12 @@
 package org.smartroots.domain
 
 import org.koin.core.component.KoinComponent
-import org.koin.core.module.dsl.factoryOf
 import org.koin.core.parameter.parameterSetOf
-import org.koin.dsl.module
 import org.smartroots.data.model.NetworkUrl
 import org.smartroots.data.model.Sensor
 import org.smartroots.data.repository.SensorRepository
 
+// PUT MORE ERROR HANDLING FOR THIS
 class GetSensorReadingsUseCase(private val getNetworkConnectionUseCase: GetNetworkConnectionUseCase) :
     KoinComponent {
     suspend operator fun invoke(): Map<String, Double> {
@@ -29,14 +28,14 @@ class GetSensorReadingsUseCase(private val getNetworkConnectionUseCase: GetNetwo
         val mappedSensorReadings = sensor.toMap()
         val validSensorReadings: MutableMap<String, Double> = mutableMapOf()
         var nullReadings = 0
-        for ((key:String, value) in mappedSensorReadings.entries) {
-            if( value.toDoubleOrNull()!=null){
+        for ((key: String, value) in mappedSensorReadings.entries) {
+            if (value.toDoubleOrNull() != null) {
                 validSensorReadings.put(key, value.toDouble())
-            }else{
+            } else {
                 validSensorReadings.put(key, -999.9)
             }
         }
-        return if(nullReadings<mappedSensorReadings.count()) validSensorReadings else emptyMap()
+        return if (nullReadings < mappedSensorReadings.count()) validSensorReadings else emptyMap()
 
 
     }
@@ -53,6 +52,3 @@ class GetSensorReadingsUseCase(private val getNetworkConnectionUseCase: GetNetwo
     }
 }
 
-val GetSensorReadingsUseCaseModule = module {
-    factoryOf(::GetSensorReadingsUseCase)
-}

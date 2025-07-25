@@ -2,9 +2,11 @@ package org.smartroots.data.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+
 /**
  * @author Shravan Ramjathan
  */
+
 @Serializable
 data class Sensor(
     @SerialName("EC")
@@ -18,5 +20,5 @@ data class Sensor(
     @SerialName("Temperature")
     val temperature: String = "Unavailable Data",
     @SerialName("FlowRate")
-    val flowRate: String ="Unavailable Data"
+    val flowRate: String = "Unavailable Data",
 )
