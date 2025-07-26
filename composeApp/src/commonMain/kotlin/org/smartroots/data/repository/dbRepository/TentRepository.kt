@@ -4,7 +4,7 @@ import org.smartroots.data.database.entity.TentEntity
 import org.smartroots.data.relationships.TentWithBoxes
 
 interface TentRepository {
-    suspend fun insertTent(tentEntity: TentEntity): Long
+    suspend fun upsert(tentEntity: TentEntity): Long
     suspend fun getTentWithName(name: String): TentEntity
 
     suspend fun getAllTents(): List<TentEntity>

@@ -6,8 +6,8 @@ import org.smartroots.data.relationships.BoxWithSensors
 
 // remote database set up
 class BoxRepositoryImpl(private val boxDao: BoxDao) : BoxRepository {
-    override suspend fun insert(box: BoxEntity): Long {
-        return boxDao.insert(box)
+    override suspend fun upsert(box: BoxEntity): Long {
+        return boxDao.upsert(box)
     }
 
     override suspend fun getAllBoxes(): List<BoxEntity> {

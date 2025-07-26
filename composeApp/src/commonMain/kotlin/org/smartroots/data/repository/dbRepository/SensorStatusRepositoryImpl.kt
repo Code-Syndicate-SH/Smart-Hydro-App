@@ -4,8 +4,8 @@ import org.smartroots.data.database.Dao.SensorDao
 import org.smartroots.data.database.entity.SensorActivityReading
 
 class SensorStatusRepositoryImpl(private val sensorDao: SensorDao) : SensorStatusRepository {
-    override suspend fun insert(sensorActivityReading: SensorActivityReading): Long {
-        return sensorDao.insert(sensorActivityReading)
+    override suspend fun upsert(sensorActivityReading: SensorActivityReading): Long {
+        return sensorDao.upsert(sensorActivityReading)
     }
 
     override suspend fun getSensorStatus(id: Int): SensorActivityReading {
