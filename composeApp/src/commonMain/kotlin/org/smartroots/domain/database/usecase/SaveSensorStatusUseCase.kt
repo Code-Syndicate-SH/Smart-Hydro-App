@@ -9,7 +9,7 @@ class SaveSensorStatusUseCase(private val sensorStatusRepository: SensorStatusRe
             return null // if this happens the ui was not strict enough
         }
         try {
-            val id = sensorStatusRepository.insert(sensorActivityReading).toInt()
+            val id = sensorStatusRepository.upsert(sensorActivityReading).toInt()
             val sensorStatus: SensorActivityReading = sensorStatusRepository.getSensorStatus(id)
             return sensorStatus
         } catch (e: Exception) {
