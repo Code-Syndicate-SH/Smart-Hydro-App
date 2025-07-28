@@ -1,8 +1,8 @@
 package org.smartroots
+
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
-import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
@@ -24,6 +24,7 @@ import org.smartroots.data.repository.dbRepository.SensorStatusRepositoryImpl
 import org.smartroots.data.repository.dbRepository.TentRepository
 import org.smartroots.data.repository.dbRepository.TentRepositoryImpl
 import org.smartroots.data.service.NetworkConfig
+import org.smartroots.data.service.NetworkService
 import org.smartroots.data.service.SensorAPI
 import org.smartroots.domain.GetNetworkConnectionUseCase
 import org.smartroots.domain.GetSensorReadingsUseCase
@@ -36,6 +37,15 @@ fun initKoin(config: KoinAppDeclaration? = null) =
         config?.invoke(this)
         modules(
             platformModule(),
+            dbDatabaseDao,
+            provideDatabaseRepository,
+            sensorRepositoryModule,
+            networkConfigModule,
+            networkRepositoryModule,
+            NetworkConnectionUseCaseModule,
+            GetSensorReadingsUseCaseModule,
+            homeViewModelModule,
+            ktorClientModule
             // add my modules
         )
     }
@@ -56,10 +66,10 @@ val sensorRepositoryModule = module {
         SensorRepositoryImpl(api)
     }
 }
-
 val networkConfigModule = module {
-    singleOf(::NetworkConfig)
+    factory<NetworkService> { NetworkConfig() }
 }
+
 // network configREpo
 val networkRepositoryModule = module {
     factory<NetworkConfigRepository> { NetworkConfigRepositoryImpl(get()) }
@@ -69,6 +79,7 @@ val ktorClientModule = module {
     single(named("BASE_URL_REMOTE")) { "http://192.168.1.102/" } // this will change to web service soon.
     single { createHttpClient() }
 }
+
 // daos
 val dbDatabaseDao = module {
     factory { get<AppDatabase>().getBoxDao() }
