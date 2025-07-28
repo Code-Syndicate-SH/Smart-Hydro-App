@@ -1,6 +1,7 @@
 package org.smartroots
 
 
+import androidx.room.RoomDatabase
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -16,8 +17,8 @@ class JVMPlatform : Platform {
 actual fun getPlatform(): Platform = JVMPlatform()
 
 actual fun platformModule() = module {
-    single<AppDatabase> {
-        getDatabaseBuilder().build()
+    single<RoomDatabase.Builder<AppDatabase>> {
+        getDatabaseBuilder()
     }
 }
 

@@ -6,16 +6,16 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.core.component.KoinComponent
 
 
-
-class MainApplication: Application(), KoinComponent {
+class MainApplication : Application(), KoinComponent {
 
     override fun onCreate() {
         super.onCreate()
-        initKoin {
+
+        initKoin() {
             androidLogger()
             androidContext(this@MainApplication)
-            modules(platformModule())
+            platformModule()
         }
-    }
 
+    }
 }

@@ -10,7 +10,6 @@ import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 import org.smartroots.data.database.AppDatabase
 import org.smartroots.data.database.getRoomDatabase
-import org.smartroots.data.module.createHttpClient
 import org.smartroots.data.repository.NetworkConfigRepository
 import org.smartroots.data.repository.NetworkConfigRepositoryImpl
 import org.smartroots.data.repository.SensorRepository
@@ -77,7 +76,7 @@ val networkRepositoryModule = module {
 val ktorClientModule = module {
     single(named("BASE_URL_LOCAL")) { "http://192.168.8.14/" }
     single(named("BASE_URL_REMOTE")) { "http://192.168.1.102/" } // this will change to web service soon.
-    single { createHttpClient() }
+
 }
 
 // daos
