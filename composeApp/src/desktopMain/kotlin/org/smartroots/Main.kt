@@ -8,6 +8,9 @@ fun main() = application {
         onCloseRequest = ::exitApplication,
         title = "SmartRoots",
     ) {
+        initKoin() {
+            platformModule()
+        }
         App()
     }
 }

@@ -2,21 +2,23 @@ package org.smartroots.data.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+
 /**
  * @author Shravan Ramjathan
  */
+const val unavailableData = "Unavailable Data"
 @Serializable
 data class Sensor(
     @SerialName("EC")
-    val eC: String = "Unavailable Data",
+    val eC: String = unavailableData,
     @SerialName("Humidity")
-    val humidity: String = "Unavailable Data",
+    val humidity: String = unavailableData,
     @SerialName("Light")
-    val light: String = "Unavailable Data",
+    val light: String = unavailableData,
     @SerialName("PH")
-    val pH: String = "Unavailable Data",
+    val pH: String = unavailableData,
     @SerialName("Temperature")
-    val temperature: String = "Unavailable Data",
+    val temperature: String = unavailableData,
     @SerialName("FlowRate")
-    val flowRate: String ="Unavailable Data"
+    val flowRate: String = unavailableData,
 )
