@@ -88,7 +88,12 @@ kotlin {
         }
 
         commonTest.dependencies {
-            implementation(libs.kotlin.test)
+            implementation(kotlin("test"))
+            implementation("io.ktor:ktor-client-mock:3.1.3")
+            implementation("io.ktor:ktor-client-content-negotiation:3.1.3")
+            implementation("io.ktor:ktor-serialization-kotlinx-json:3.1.3")
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
