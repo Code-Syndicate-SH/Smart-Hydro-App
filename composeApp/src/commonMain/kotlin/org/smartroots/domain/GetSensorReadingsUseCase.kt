@@ -1,35 +1,41 @@
 package org.smartroots.domain
 
 import org.koin.core.component.KoinComponent
-import org.koin.core.module.dsl.factoryOf
 import org.koin.core.parameter.parameterSetOf
-import org.koin.dsl.module
+import org.smartroots.data.model.NetworkUrl
 import org.smartroots.data.model.Sensor
 import org.smartroots.data.repository.SensorRepository
 
+// PUT MORE ERROR HANDLING FOR THIS
 class GetSensorReadingsUseCase(private val getNetworkConnectionUseCase: GetNetworkConnectionUseCase) :
     KoinComponent {
-    suspend operator fun invoke(): Map<String,String> {
-        val baseURL: String = getNetworkConnectionUseCase()
+    suspend operator fun invoke(): Map<String, Double> {
+        var networkUrl: NetworkUrl?
+        try {
+            networkUrl = getNetworkConnectionUseCase()
+        } catch (e: NullPointerException) {
+            throw NullPointerException("System is not connected to a network.")
+        }
         val sensorRepository: SensorRepository =
-            getKoin().get<SensorRepository> { parameterSetOf(baseURL) }
-       var sensorReadings: Sensor =  sensorRepository.fetchSensorReading()
-        val mappedReadings= validateSensorReading(sensorReadings)
+            getKoin().get<SensorRepository> { parameterSetOf(networkUrl?.url) }
+        var sensorReadings: Sensor = sensorRepository.fetchSensorReading()
+        val mappedReadings = validateSensorReading(sensorReadings)
         return mappedReadings
 
     }
 
-    private fun validateSensorReading(sensor: Sensor): Map<String,String> {
+    private fun validateSensorReading(sensor: Sensor): Map<String, Double> {
         val mappedSensorReadings = sensor.toMap()
+        val validSensorReadings: MutableMap<String, Double> = mutableMapOf()
         var nullReadings = 0
-        var validReadings = true
-        for ((key, value: String) in mappedSensorReadings) {
-          if(value.isEmpty() || value.isBlank()){
-          validReadings= false
-           nullReadings++
-          }
+        for ((key: String, value) in mappedSensorReadings.entries) {
+            if (value.toDoubleOrNull() != null) {
+                validSensorReadings.put(key, value.toDouble())
+            } else {
+                validSensorReadings.put(key, -999.9)
+            }
         }
-        return if(nullReadings<mappedSensorReadings.count()) mappedSensorReadings else Sensor().toMap()
+        return if (nullReadings < mappedSensorReadings.count()) validSensorReadings else emptyMap()
 
 
     }
@@ -46,6 +52,3 @@ class GetSensorReadingsUseCase(private val getNetworkConnectionUseCase: GetNetwo
     }
 }
 
-val GetSensorReadingsUseCaseModule = module {
-    factoryOf(::GetSensorReadingsUseCase)
-}

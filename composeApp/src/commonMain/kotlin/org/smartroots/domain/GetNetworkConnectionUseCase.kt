@@ -1,8 +1,7 @@
 package org.smartroots.domain
 
-import org.koin.core.module.dsl.factoryOf
-import org.koin.dsl.module
-import org.smartroots.data.model.NetworkInfo
+import org.smartroots.data.model.ArduinoAccess
+import org.smartroots.data.model.NetworkUrl
 import org.smartroots.data.repository.NetworkConfigRepository
 
 class GetNetworkConnectionUseCase(
@@ -10,17 +9,23 @@ class GetNetworkConnectionUseCase(
     private val localURL: String,
     private val remoteURL: String,
 ) {
-    suspend operator fun invoke(): String {
-        val networkInfo: NetworkInfo = networkConfigRepository.checkNetworkInfo()
-
-        val result =  when (networkInfo.urlUsage) {
-            "Remote" -> remoteURL
-            "Local"-> localURL
-         else -> "Unknown"
+    suspend operator fun invoke(): NetworkUrl? {
+        val currentIpv4Address: String? = networkConfigRepository.currentIPV4Address()
+        if (currentIpv4Address == null) {
+            throw NullPointerException("The system is not connected to a network.")
         }
-        return result
+
+        val url = when {
+            currentIpv4Address.startsWith(ArduinoAccess.LOCAL_IP_MATCH.ip) -> localURL
+            currentIpv4Address.startsWith(ArduinoAccess.REMOTE_IP_MATCH.ip) -> remoteURL
+            else -> "Unknown"
+        }
+        val isLocal = when {
+            url == localURL -> true
+            url == remoteURL -> false
+            else -> throw NullPointerException("There is an unknown connection!")
+        }
+        return NetworkUrl(url = url, isLocal = isLocal)
     }
 }
-val NetworkConnectionUseCaseModule = module{
-    factoryOf(::GetNetworkConnectionUseCase)
-}
+
