@@ -33,7 +33,7 @@ fun App() {
     MaterialTheme {
         val navController =
             rememberNavController()
-        Scaffold(){innerPadding->
+        Scaffold(){innerPadding->}
 
         var showContent by remember { mutableStateOf(false) }
         Column(
