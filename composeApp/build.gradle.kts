@@ -88,7 +88,10 @@ kotlin {
         }
 
         commonTest.dependencies {
-            implementation(libs.kotlin.test)
+            implementation("io.insert-koin:koin-test:3.5.6")
+            implementation(kotlin("test"))
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
+
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
