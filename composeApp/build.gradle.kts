@@ -88,11 +88,17 @@ kotlin {
         }
 
         commonTest.dependencies {
+
             implementation(kotlin("test"))
             implementation("io.ktor:ktor-client-mock:3.1.3")
             implementation("io.ktor:ktor-client-content-negotiation:3.1.3")
             implementation("io.ktor:ktor-serialization-kotlinx-json:3.1.3")
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+          
+
+            implementation("io.insert-koin:koin-test:3.5.6")
+         
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
+
 
         }
         desktopMain.dependencies {
