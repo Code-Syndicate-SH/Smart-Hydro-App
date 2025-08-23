@@ -2,6 +2,7 @@ package org.smartroots
 
 
 import androidx.room.RoomDatabase
+import dev.tmapps.konnection.Konnection
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -20,6 +21,7 @@ actual fun platformModule() = module {
     single<RoomDatabase.Builder<AppDatabase>> {
         getDatabaseBuilder()
     }
+    single { Konnection.createInstance() }
 }
 
 actual fun createHttpClient(): HttpClient {

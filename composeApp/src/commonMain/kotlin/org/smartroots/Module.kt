@@ -68,7 +68,7 @@ val sensorRepositoryModule = module {
 }
 val networkConfigModule = module {
     factory<NetworkService> { NetworkConfig(get()) }
-    single { Konnection.createInstance() }
+
 }
 
 // network configREpo
