@@ -6,7 +6,7 @@ import org.smartroots.data.repository.NetworkConfigRepository
 
 class GetNetworkConnectionUseCase(
     private val networkConfigRepository: NetworkConfigRepository,
-    private val localURL: String,
+     private val localURL: String,
     private val remoteURL: String,
 ) {
     suspend operator fun invoke(): NetworkUrl? {
