@@ -45,7 +45,7 @@ fun initKoin(config: KoinAppDeclaration? = null) =
             NetworkConnectionUseCaseModule,
             GetSensorReadingsUseCaseModule,
             homeViewModelModule,
-            ktorClientModule
+
             // add my modules
         )
     }
@@ -75,11 +75,7 @@ val networkConfigModule = module {
 val networkRepositoryModule = module {
     factory<NetworkConfigRepository> { NetworkConfigRepositoryImpl(get()) }
 }
-val ktorClientModule = module {
-    single(named("BASE_URL_LOCAL")) { "http://192.168.8.14/" }
-    single(named("BASE_URL_REMOTE")) { "http://192.168.1.102/" } // this will change to web service soon.
 
-}
 
 // daos
 val dbDatabaseDao = module {
@@ -91,7 +87,7 @@ val dbDatabaseDao = module {
 // use case
 
 val NetworkConnectionUseCaseModule = module {
-    factoryOf(::GetNetworkConnectionUseCase)
+    factory { GetNetworkConnectionUseCase(get()) }
 }
 val GetSensorReadingsUseCaseModule = module {
     factoryOf(::GetSensorReadingsUseCase)
