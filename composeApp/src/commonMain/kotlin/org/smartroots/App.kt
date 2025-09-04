@@ -19,9 +19,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.context.startKoin
+import org.smartroots.presentation.screens.HomeScreen
+import org.smartroots.presentation.screens.ScreenRoutes
+import org.smartroots.presentation.viewmodel.HomeViewModel
 import smartroots.composeapp.generated.resources.Res
 import smartroots.composeapp.generated.resources.ic_soil_ph
 import smartroots.composeapp.generated.resources.ic_temperature
@@ -41,7 +49,19 @@ data class MonitoringOption(
 )
 
 
+@Composable
+fun App(){
+val homeViewModel = koinViewModel<HomeViewModel>()
+    val navController = rememberNavController()
 
+    Scaffold { innerPadding->
+        Surface(modifier = Modifier.padding(innerPadding)) {
+            NavHost(navController, startDestination = ScreenRoutes.HomeScreen) {
+                composable<ScreenRoutes.HomeScreen> { HomeScreen(homeViewModel) }
+            }
+        }
+    }
+}
 @Composable
 fun MonitoringCard(option: MonitoringOption) {
     Card(
