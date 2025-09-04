@@ -28,6 +28,7 @@ import smartroots.composeapp.generated.resources.ic_ec
 import smartroots.composeapp.generated.resources.ic_humidity
 import smartroots.composeapp.generated.resources.ic_lights
 import smartroots.composeapp.generated.resources.ic_soil_ph
+import smartroots.composeapp.generated.resources.ic_temperature
 import smartroots.composeapp.generated.resources.ic_water
 const val GET_SENSOR_DATA_DELAY_MS: Long = 5 * 1000
 
@@ -38,12 +39,14 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel<HomeViewModel>()) {
     LaunchedEffect(Unit) {
         viewModel.fetchSensorPeriodically(GET_SENSOR_DATA_DELAY_MS)
     }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFEEF7EE)) // Green-tinted background
             .verticalScroll(rememberScrollState())
-            .padding(16.dp)
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = "Sensor Dashboard",
@@ -51,29 +54,34 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel<HomeViewModel>()) {
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
+        SensorCard(
+            title = "Water Level",
+            iconRes = Res.drawable.ic_water,
+            value = "${uiState.sensorReadings["flowRate"] ?: 0.0} %"
+        )
+        SensorCard(
+            title = "Temperature",
+            iconRes = Res.drawable.ic_temperature,
+            value = "${uiState.sensorReadings["temperature"]?:0.0}"
+        )
         SensorCard(
             title = "Soil pH",
             iconRes = Res.drawable.ic_soil_ph,
-            value = "${uiState.sensorReadings["soilPH"] ?: 0.0} pH"
+            value = "${uiState.sensorReadings["pH"] ?: 0.0} pH"
         )
 
         SensorCard(
             title = "Electrical Conductivity",
             iconRes = Res.drawable.ic_ec,
-            value = "${uiState.sensorReadings["electricalConductivity"] ?: 0.0} µS/cm"
+            value = "${uiState.sensorReadings["eC"] ?: 0.0} µS/cm"
         )
 
-        SensorCard(
-            title = "Water Level",
-            iconRes = Res.drawable.ic_water,
-            value = "${uiState.sensorReadings["waterLevel"] ?: 0.0} %"
-        )
+
 
         SensorCard(
             title = "Lights",
             iconRes = Res.drawable.ic_lights,
-            value = "${uiState.sensorReadings["lights"] ?: 0.0} %"
+            value = "${uiState.sensorReadings["light"] ?: 0.0} %"
         )
 
         SensorCard(

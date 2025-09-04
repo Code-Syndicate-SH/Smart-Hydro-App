@@ -25,11 +25,26 @@ class HomeViewModel(private val getSensorReadingsUseCase: GetSensorReadingsUseCa
             currentUI.copy(languagePreference = languagePreference)
         }
     }
-
+    private fun updateNetworkError(message:String){
+        _homeUIState.update {currentState->
+            currentState.copy(networkError = message , sensorError = message)
+        }
+    }
+    private fun clearErrorMessages(){
+        _homeUIState.update {currentState->
+            currentState.copy(networkError = "" , sensorError = "")
+        }
+    }
     // make sure to catch the custom errors from the domain use case
     fun getSensorReading() {
         viewModelScope.launch {
-            val sensorReadings: Map<String, Double> = getSensorReadingsUseCase()
+            var sensorReadings = emptyMap<String, Double>()
+            try {
+                clearErrorMessages()
+                 sensorReadings= getSensorReadingsUseCase()
+            }catch (e: Exception){
+               updateNetworkError(e.message.toString())
+            }
             if (sensorReadings.count() == 0) {
                 _homeUIState.update { currentReadings ->
                     currentReadings.copy(sensorError = "Trouble reading the current values!")
