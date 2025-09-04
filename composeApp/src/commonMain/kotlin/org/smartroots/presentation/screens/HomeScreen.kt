@@ -2,6 +2,7 @@ package org.smartroots.presentation.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -99,13 +100,15 @@ fun SensorCard(title: String, iconRes: DrawableResource, value: String) {
             .fillMaxWidth()
             .padding(vertical = 8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-        shape = RoundedCornerShape(12.dp)
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        shape = RoundedCornerShape(12.dp),
+
     ) {
         Row(
-            modifier = Modifier
-                .background(Color.White)
+            modifier = Modifier.fillMaxWidth()
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
+
         ) {
             Image(
                 painter = painterResource(iconRes),
