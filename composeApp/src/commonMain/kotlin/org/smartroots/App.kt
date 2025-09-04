@@ -41,14 +41,6 @@ import smartroots.composeapp.generated.resources.ic_notes
 import smartroots.composeapp.generated.resources.ic_camera
 
 
-
-data class MonitoringOption(
-    val title: String,
-    val iconRes: DrawableResource,
-    val backgroundColor: Color
-)
-
-
 @Composable
 fun App(){
 val homeViewModel = koinViewModel<HomeViewModel>()
@@ -62,49 +54,3 @@ val homeViewModel = koinViewModel<HomeViewModel>()
         }
     }
 }
-@Composable
-fun MonitoringCard(option: MonitoringOption) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(80.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = option.backgroundColor
-        ),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = option.title,
-                color = Color.White,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Medium
-            )
-
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .background(
-                        Color.White,
-                        RoundedCornerShape(8.dp)
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Image(
-                    painter = painterResource(option.iconRes),
-                    contentDescription = option.title,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-        }
-    }
-}
-
-
