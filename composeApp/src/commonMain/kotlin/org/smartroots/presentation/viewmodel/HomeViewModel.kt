@@ -2,10 +2,14 @@ package org.smartroots.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.smartroots.domain.GetSensorReadingsUseCase
 import org.smartroots.presentation.state.HomeUI
@@ -14,14 +18,7 @@ class HomeViewModel(private val getSensorReadingsUseCase: GetSensorReadingsUseCa
     private val _homeUIState = MutableStateFlow(HomeUI())
     val homeUIState: StateFlow<HomeUI> = _homeUIState.asStateFlow()
 
-    fun updateLiveReadings() {
-        viewModelScope.launch {
-            val readingsFromTent = getSensorReadingsUseCase()
-            _homeUIState.update { currentState ->
-                currentState.copy(sensorReadings = readingsFromTent)
-            }
-        }
-    }
+
 
     fun updateLanguagePreference(languagePreference: String) {
         _homeUIState.update { currentUI ->
@@ -41,6 +38,14 @@ class HomeViewModel(private val getSensorReadingsUseCase: GetSensorReadingsUseCa
             }
             _homeUIState.update { currentReadings ->
                 currentReadings.copy(sensorReadings = sensorReadings)
+            }
+        }
+    }
+    fun fetchSensorPeriodically(milliseconds: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            while (isActive) {
+                getSensorReading()
+                delay(milliseconds)
             }
         }
     }

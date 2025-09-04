@@ -11,6 +11,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,11 +29,15 @@ import smartroots.composeapp.generated.resources.ic_humidity
 import smartroots.composeapp.generated.resources.ic_lights
 import smartroots.composeapp.generated.resources.ic_soil_ph
 import smartroots.composeapp.generated.resources.ic_water
+const val GET_SENSOR_DATA_DELAY_MS: Long = 5 * 1000
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel = koinViewModel<HomeViewModel>()) {
-    val uiState by viewModel.homeUIState.collectAsStateWithLifecycle()
 
+    val uiState by viewModel.homeUIState.collectAsStateWithLifecycle()
+    LaunchedEffect(Unit) {
+        viewModel.fetchSensorPeriodically(GET_SENSOR_DATA_DELAY_MS)
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
