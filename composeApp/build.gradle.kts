@@ -21,7 +21,7 @@ kotlin {
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_21)
+            jvmTarget.set(JvmTarget.JVM_11)
         }
     }
 
@@ -82,7 +82,7 @@ kotlin {
             implementation(libs.coil.network.ktor)
             implementation(libs.konnection.lib)
             implementation(libs.sqlite.bundled)
-       //     implementation(compose.components.resources)
+
             // date time
             implementation(libs.date.time)
         }
@@ -137,8 +137,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     lint {
         disable.add("NullSafeMutableLiveData")
