@@ -2,18 +2,33 @@ package org.smartroots.presentation.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import  androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import org.smartroots.presentation.viewmodel.HomeViewModel
 import smartroots.composeapp.generated.resources.Res
@@ -31,6 +47,7 @@ import smartroots.composeapp.generated.resources.ic_lights
 import smartroots.composeapp.generated.resources.ic_soil_ph
 import smartroots.composeapp.generated.resources.ic_temperature
 import smartroots.composeapp.generated.resources.ic_water
+
 const val GET_SENSOR_DATA_DELAY_MS: Long = 5 * 1000
 
 @Composable
@@ -63,7 +80,7 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel<HomeViewModel>()) {
         SensorCard(
             title = "Temperature",
             iconRes = Res.drawable.ic_temperature,
-            value = "${uiState.sensorReadings["temperature"]?:0.0}"
+            value = "${uiState.sensorReadings["temperature"] ?: 0.0}"
         )
         SensorCard(
             title = "Soil pH",
@@ -92,7 +109,61 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel<HomeViewModel>()) {
         )
     }
 }
+@Composable
+fun DropdownMenuWithDetails() {
+    var expanded by remember { mutableStateOf(false) }
 
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        IconButton(onClick = { expanded = !expanded }) {
+            Icon(Icons.Default.MoreVert, contentDescription = "More options")
+        }
+        DropdownMenu (
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            // First section
+            DropdownMenuItem(
+                text = { Text("Profile") },
+                leadingIcon = { Icon(Icons.Outlined.Person, contentDescription = null) },
+                onClick = { /* Do something... */ }
+            )
+            DropdownMenuItem(
+                text = { Text("Settings") },
+                leadingIcon = { Icon(Icons.Outlined.Settings, contentDescription = null) },
+                onClick = { /* Do something... */ }
+            )
+
+            HorizontalDivider()
+
+            // Second section
+            DropdownMenuItem(
+                text = { Text("Send Feedback") },
+                leadingIcon = { Icon(Icons.Outlined.Feedback, contentDescription = null) },
+                trailingIcon = { Icon(Icons.AutoMirrored.Outlined.Send, contentDescription = null) },
+                onClick = { /* Do something... */ }
+            )
+
+            HorizontalDivider()
+
+            // Third section
+            DropdownMenuItem(
+                text = { Text("About") },
+                leadingIcon = { Icon(Icons.Outlined.Info, contentDescription = null) },
+                onClick = { /* Do something... */ }
+            )
+            DropdownMenuItem(
+                text = { Text("Help") },
+                leadingIcon = { Icon(Icons.AutoMirrored.Outlined.Help, contentDescription = null) },
+                trailingIcon = { Icon(Icons.AutoMirrored.Outlined.OpenInNew, contentDescription = null) },
+                onClick = { /* Do something... */ }
+            )
+        }
+    }
+}
 @Composable
 fun SensorCard(title: String, iconRes: DrawableResource, value: String) {
     Card(
@@ -103,7 +174,7 @@ fun SensorCard(title: String, iconRes: DrawableResource, value: String) {
         colors = CardDefaults.cardColors(containerColor = Color.White),
         shape = RoundedCornerShape(12.dp),
 
-    ) {
+        ) {
         Row(
             modifier = Modifier.fillMaxWidth()
                 .padding(16.dp),
@@ -127,8 +198,20 @@ fun SensorCard(title: String, iconRes: DrawableResource, value: String) {
 }
 
 
-/*
-@Preview(showBackground = true)
+@Composable
+fun Header(title: String, languages: List<String>) {
+    Row() {
+        Text(
+            text = "Sensor Dashboard",
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+    }
+
+}
+
+@Preview()
 @Composable
 fun PreviewHomeScreen() {
     Column(
@@ -136,6 +219,13 @@ fun PreviewHomeScreen() {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
+
+        Text(
+            text = "Sensor Dashboard",
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
         SensorCard("Soil pH", Res.drawable.ic_soil_ph, "6.5 pH")
         SensorCard("Electrical Conductivity", Res.drawable.ic_ec, "1400 µS/cm")
         SensorCard("Water Level", Res.drawable.ic_water, "75 %")
@@ -144,4 +234,3 @@ fun PreviewHomeScreen() {
     }
 }
 
-*/
