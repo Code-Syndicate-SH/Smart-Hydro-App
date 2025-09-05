@@ -24,9 +24,9 @@ class GetNetworkConnectionUseCase(
         val isLocal = when {
             url == BASE_URL_LOCAL -> true
             url == BASE_URL_REMOTE -> false
-            else -> throw NullPointerException("There is an unknown connection!")
+            else -> true
         }
-        return NetworkUrl(url = url, isLocal = isLocal)
+        return NetworkUrl(url = BASE_URL_LOCAL, isLocal = isLocal)
     }
 }
 

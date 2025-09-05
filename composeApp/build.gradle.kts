@@ -85,6 +85,9 @@ kotlin {
 
             // date time
             implementation(libs.date.time)
+
+            implementation(libs.icons)
+            implementation(libs.icons.extended)
         }
 
         commonTest.dependencies {
