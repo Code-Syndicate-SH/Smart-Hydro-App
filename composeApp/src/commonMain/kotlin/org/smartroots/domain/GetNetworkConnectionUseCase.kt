@@ -8,25 +8,14 @@ class GetNetworkConnectionUseCase(
     private val networkConfigRepository: NetworkConfigRepository,
 
 ) {
-    val BASE_URL_LOCAL =   "http://192.168.8.14/"
-    val BASE_URL_REMOTE =   "http://192.168.1.102/"
+
     suspend operator fun invoke(): NetworkUrl? {
         val currentIpv4Address: String? = networkConfigRepository.currentIPV4Address()
-        if (currentIpv4Address == null) {
-            throw NullPointerException("The system is not connected to a network.")
-        }
+       val isLocalConnection = currentIpv4Address==null
 
-        val url = when {
-            currentIpv4Address.startsWith(ArduinoAccess.LOCAL_IP_MATCH.ip) -> BASE_URL_LOCAL
-            currentIpv4Address.startsWith(ArduinoAccess.REMOTE_IP_MATCH.ip) -> BASE_URL_REMOTE
-            else -> "Unknown"
-        }
-        val isLocal = when {
-            url == BASE_URL_LOCAL -> true
-            url == BASE_URL_REMOTE -> false
-            else -> throw NullPointerException("There is an unknown connection!")
-        }
-        return NetworkUrl(url = url, isLocal = isLocal)
+        val url = if(isLocalConnection) ArduinoAccess.LOCAL_IP.ip else ArduinoAccess.REMOTE_IP.ip
+
+        return NetworkUrl(url =url , isLocal = isLocalConnection)
     }
 }
 

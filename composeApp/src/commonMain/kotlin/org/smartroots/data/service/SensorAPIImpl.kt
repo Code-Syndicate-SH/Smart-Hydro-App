@@ -4,6 +4,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse
+import io.ktor.util.logging.Logger
 import org.koin.dsl.module
 import org.smartroots.data.model.Sensor
 
@@ -30,12 +31,4 @@ class SensorAPIImpl(
 
 }
 
-val SensorReadingModule = module {
-    factory<SensorAPI> { (baseURL:String) ->
-        SensorAPIImpl(
-            baseURL = baseURL,
-            tentClient = get(),
 
-        )
-    }
-}

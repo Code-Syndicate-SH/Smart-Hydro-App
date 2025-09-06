@@ -30,7 +30,7 @@ class NetworkConfig(val konnection: Konnection) : NetworkService {
     override suspend fun currentIPV4Address(): String? {
         val currentNetworkInfo = _currentConnectionStatus.value.konnection?.getInfo()
         val currentIPv4Address = currentNetworkInfo?.ipv4
-        return if (currentIPv4Address != null) currentIPv4Address else null
+        return if (currentIPv4Address != null) currentIPv4Address else currentNetworkInfo?.ipv4
     }
 
 

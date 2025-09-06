@@ -26,6 +26,7 @@ import org.smartroots.data.repository.dbRepository.TentRepositoryImpl
 import org.smartroots.data.service.NetworkConfig
 import org.smartroots.data.service.NetworkService
 import org.smartroots.data.service.SensorAPI
+import org.smartroots.data.service.SensorAPIImpl
 import org.smartroots.domain.GetNetworkConnectionUseCase
 import org.smartroots.domain.GetSensorReadingsUseCase
 import org.smartroots.presentation.viewmodel.HomeViewModel
@@ -45,7 +46,8 @@ fun initKoin(config: KoinAppDeclaration? = null) =
             NetworkConnectionUseCaseModule,
             GetSensorReadingsUseCaseModule,
             homeViewModelModule,
-            ktorClientModule
+            ktorClientModule,
+            SensorReadingModule
             // add my modules
         )
     }
@@ -80,7 +82,15 @@ val ktorClientModule = module {
     single(named("BASE_URL_REMOTE")) { "http://192.168.1.102/" } // this will change to web service soon.
 
 }
+val SensorReadingModule = module {
+    factory<SensorAPI> { (baseURL:String) ->
+        SensorAPIImpl(
+            baseURL = baseURL,
+            tentClient = get(),
 
+            )
+    }
+}
 // daos
 val dbDatabaseDao = module {
     factory { get<AppDatabase>().getBoxDao() }
