@@ -19,6 +19,7 @@ import org.smartroots.presentation.viewmodel.HomeViewModel
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import smartroots.composeapp.generated.resources.*
 
 @OptIn(ExperimentalResourceApi::class)
@@ -152,3 +153,38 @@ fun AnimatedSensorCard(title: String, value: String, iconRes: DrawableResource) 
         }
     }
 }
+
+@OptIn(org.jetbrains.compose.resources.ExperimentalResourceApi::class)
+@Preview
+@Composable
+fun PreviewHomeScreenComponents() {
+    val dummySensorItems = listOf(
+        Triple("Soil pH", "6.5", Res.drawable.ic_soil_ph),
+        Triple("Electrical Conductivity", "1400 µS/cm", Res.drawable.ic_ec),
+        Triple("Water Level", "75%", Res.drawable.ic_water),
+        Triple("Lights", "60%", Res.drawable.ic_lights),
+        Triple("Humidity", "45%", Res.drawable.ic_humidity),
+        Triple("Temperature", "22°C", Res.drawable.ic_temperature),
+    )
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFEEF7EE))
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
+        Text(
+            text = "Sensor Dashboard (Preview)",
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+
+        dummySensorItems.forEach { (title, value, icon) ->
+            SensorCard(title = title, value = value, iconRes = icon)
+        }
+    }
+}
+
+
+
