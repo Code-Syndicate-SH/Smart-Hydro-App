@@ -1,5 +1,6 @@
 package org.smartroots
 
+import dev.tmapps.konnection.Konnection
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
@@ -68,7 +69,8 @@ val sensorRepositoryModule = module {
     }
 }
 val networkConfigModule = module {
-    factory<NetworkService> { NetworkConfig() }
+    factory<NetworkService> { NetworkConfig(get()) }
+    single { Konnection.createInstance() }
 }
 
 // network configREpo
