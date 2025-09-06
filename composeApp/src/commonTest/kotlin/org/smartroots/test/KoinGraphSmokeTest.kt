@@ -1,20 +1,36 @@
 package org.smartroots.test
 
-import kotlin.test.*
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.dsl.module
 import org.koin.test.KoinTest
 import org.koin.test.get
-import org.smartroots.*
+import org.smartroots.GetSensorReadingsUseCaseModule
+import org.smartroots.NetworkConnectionUseCaseModule
+import org.smartroots.ktorClientModule
+import org.smartroots.networkConfigModule
+import org.smartroots.networkRepositoryModule
+import org.smartroots.platformModule
+import org.smartroots.sensorRepositoryModule
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertNotNull
 
 /**
  * Validates DI wiring for services/repos/use cases without Room/Android.
  */
 class KoinGraphSmokeTest : KoinTest {
 
-    @BeforeTest fun before() { stopKoin() }
-    @AfterTest  fun after()  { stopKoin() }
+    @BeforeTest
+    fun before() {
+        stopKoin()
+    }
+
+    @AfterTest
+    fun after() {
+        stopKoin()
+    }
 
     @Test
     fun
@@ -37,7 +53,7 @@ class KoinGraphSmokeTest : KoinTest {
                 GetSensorReadingsUseCaseModule,
                 // homeViewModelModule, // enable when you want to resolve the VM too
                 ktorClientModule,
-
+                platformModule(),
                 // Test overrides last
                 testOverrides
             )
