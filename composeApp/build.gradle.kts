@@ -82,9 +82,11 @@ kotlin {
             implementation(libs.coil.network.ktor)
             implementation(libs.konnection.lib)
             implementation(libs.sqlite.bundled)
-       //     implementation(compose.components.resources)
+
             // date time
             implementation(libs.date.time)
+
+
         }
 
         commonTest.dependencies {
@@ -162,7 +164,11 @@ dependencies {
 
 }
 
-
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
 compose.desktop {
     application {
         mainClass = "org.smartroots.MainKt"

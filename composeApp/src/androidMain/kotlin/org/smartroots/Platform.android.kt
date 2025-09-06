@@ -23,7 +23,9 @@ actual fun platformModule() = module {
     single<RoomDatabase.Builder<AppDatabase>> {
         getDatabaseBuilder(get())
     }
-    single { Konnection.createInstance(androidContext()) }
+
+    single { createHttpClient() }
+
 }
 
 
