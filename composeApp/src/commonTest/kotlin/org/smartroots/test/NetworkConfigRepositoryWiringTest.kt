@@ -22,7 +22,8 @@ class NetworkConfigRepositoryWiringTest : KoinTest {
             modules(
                 networkConfigModule,
                 networkRepositoryModule,
-                testOverrides
+                testOverrides,
+                platformModule()
             )
         }
 
