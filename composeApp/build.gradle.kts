@@ -86,8 +86,7 @@ kotlin {
             // date time
             implementation(libs.date.time)
 
-            implementation(libs.icons)
-            implementation(libs.icons.extended)
+
         }
 
         commonTest.dependencies {
@@ -154,7 +153,11 @@ dependencies {
 
 }
 
-
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
 compose.desktop {
     application {
         mainClass = "org.smartroots.MainKt"
