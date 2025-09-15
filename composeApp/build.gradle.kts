@@ -65,7 +65,6 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.room.runtime)
             implementation(libs.jetbrains.compose.navigation)
-
             // koin dependancies
             implementation(libs.koin.core)
 
