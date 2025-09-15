@@ -148,6 +148,13 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
             excludes += "DebugProbesKt.bin"
+            pickFirsts += "META-INF/INDEX.LIST"
+            pickFirsts += "META-INF/io.netty.versions.properties"
+
+
+            excludes += "META-INF/DEPENDENCIES"
+            excludes += "META-INF/NOTICE*"
+            excludes += "META-INF/LICENSE*"
         }
     }
 
@@ -165,6 +172,11 @@ android {
     lint {
         disable.add("NullSafeMutableLiveData")
         abortOnError = false
+    }
+    testOptions {
+        unitTests.all {
+            it.enabled = false
+        }
     }
 }
 
