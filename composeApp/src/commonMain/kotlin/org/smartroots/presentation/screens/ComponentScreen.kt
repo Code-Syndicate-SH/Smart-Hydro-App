@@ -5,8 +5,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -23,6 +23,7 @@ import smartroots.composeapp.generated.resources.*
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ComponentScreen(
+    navController: NavController,
     title: String,
     value: String,
     iconRes: DrawableResource
@@ -30,7 +31,7 @@ fun ComponentScreen(
     var isOn by remember { mutableStateOf(false) }
     val infiniteTransition = rememberInfiniteTransition(label = "")
 
-    // Choose animation based on component title
+    // Animation logic
     val animatedModifier = when (title.lowercase()) {
         "water level" -> {
             val scale by infiniteTransition.animateFloat(
@@ -83,55 +84,69 @@ fun ComponentScreen(
         else -> Modifier
     }
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFEEF7EE))
             .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(bottom = 24.dp)
-        )
-
-        Image(
-            painter = painterResource(iconRes),
-            contentDescription = "$title Icon",
-            modifier = Modifier.size(120.dp).then(animatedModifier)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = "Current Value: $value",
-            style = MaterialTheme.typography.titleMedium
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
+        // Back button
         Button(
-            onClick = { isOn = !isOn },
-            shape = RoundedCornerShape(12.dp)
+            onClick = { navController.popBackStack() },
+            shape = RoundedCornerShape(8.dp),
+            modifier = Modifier.align(Alignment.TopStart)
         ) {
-            Text(if (isOn) "On" else "Off")
+            Text("Back")
+        }
+
+        // Title + Icon + Value in middle
+        Column(
+            modifier = Modifier.align(Alignment.Center),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier.padding(bottom = 24.dp)
+            )
+
+            Image(
+                painter = painterResource(iconRes),
+                contentDescription = "$title Icon",
+                modifier = Modifier
+                    .size(120.dp)
+                    .then(animatedModifier)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = "Current Value: $value",
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
+
+        // Toggle ON/OFF bottom center
+        Row(
+            modifier = Modifier.align(Alignment.BottomCenter),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(if (isOn) "On" else "Off", modifier = Modifier.padding(end = 8.dp))
+            Switch(
+                checked = isOn,
+                onCheckedChange = { isOn = it },
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = Color.Green,
+                    uncheckedThumbColor = Color.Gray
+                )
+            )
         }
     }
 }
-
-
-@OptIn(ExperimentalResourceApi::class)
 @Preview
 @Composable
-fun PreviewComponentScreen() {
-    Column {
-        ComponentScreen("Soil pH", "6.5 pH", Res.drawable.ic_soil_ph)
-        ComponentScreen("Electrical Conductivity", "1400 µS/cm", Res.drawable.ic_ec)
-        ComponentScreen("Water Level", "75%", Res.drawable.ic_water)
-        ComponentScreen("Lights", "60%", Res.drawable.ic_lights)
-        ComponentScreen("Humidity", "45%", Res.drawable.ic_humidity)
-        ComponentScreen("Temperature", "22°C", Res.drawable.ic_temperature)
-    }
+fun mypreviwq(){
+    val navController = rememberNavController()
+    ComponentScreen(navController, "Water Level", "75%", Res.drawable.ic_water)
 }
