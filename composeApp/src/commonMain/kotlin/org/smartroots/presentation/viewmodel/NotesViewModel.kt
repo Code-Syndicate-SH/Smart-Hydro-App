@@ -2,11 +2,13 @@ package org.smartroots.presentation.viewmodel
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import coil3.Bitmap
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -38,7 +40,11 @@ class NotesViewModel(val saveNoteUseCase: SaveNoteUseCase ) : ViewModel() {
             currentState.copy(titleError = message, isLoading = false)
         }
     }
-
+    fun updateCameraPermission(hasCameraPermission: Boolean) {
+        _noteState.update { currentState ->
+            currentState.copy(hasCameraPermission = hasCameraPermission)
+        }
+    }
     fun updateDescriptionErrorMessage(message: String) {
         _noteState.update { currentState ->
             currentState.copy(descriptionError = message, isLoading = false)
@@ -70,31 +76,36 @@ class NotesViewModel(val saveNoteUseCase: SaveNoteUseCase ) : ViewModel() {
             currentState.copy(errorMessage = "", titleError = "", descriptionError = "")
         }
     }
-   suspend fun onSave(): NoteEntity? {
+    fun onSave(): NoteEntity? {
        resetErrors()
        loading()
        validateState()
-       try {
+        var savedNoteEntity: NoteEntity? = null
 
-           val currentMoment: Instant = Clock.System.now()
-          // val datetimeInUtc: LocalDateTime = currentMoment.toLocalDateTime(TimeZone.UTC)
-           val datetimeInSystemZone: LocalDateTime =
-               currentMoment.toLocalDateTime(TimeZone.currentSystemDefault())
-           datetimeInSystemZone.toString()
-           val bytes: ByteArray? = _noteState.value.image?.let { platformImageToBytes(it) }
-           val noteEntity = NoteEntity(
-               title = title.text.toString(),
-               description = description.text.toString(),
-               image = bytes,
-               createdDate = datetimeInSystemZone.toString(),
-           )
-           val savedNote = saveNoteUseCase(noteEntity)
-           if(savedNote!=null){
-               return savedNote
-           }
-       }catch (e: Exception){
-          updateErrorMessage("Problem saving the note, please try again")
-       }
+            try {
+
+                val currentMoment: Instant = Clock.System.now()
+                // val datetimeInUtc: LocalDateTime = currentMoment.toLocalDateTime(TimeZone.UTC)
+                val datetimeInSystemZone: LocalDateTime =
+                    currentMoment.toLocalDateTime(TimeZone.currentSystemDefault())
+                datetimeInSystemZone.toString()
+                val bytes: ByteArray? = _noteState.value.image?.let { platformImageToBytes(it) }
+                val noteEntity = NoteEntity(
+                    title = title.text.toString(),
+                    description = description.text.toString(),
+                    image = bytes,
+                    createdDate = datetimeInSystemZone.toString(),
+                )
+                viewModelScope.launch {
+                    savedNoteEntity = saveNoteUseCase(noteEntity)
+                }
+                if (savedNoteEntity != null) {
+                  return savedNoteEntity
+                }
+            } catch (e: Exception) {
+                updateErrorMessage("Problem saving the note, please try again")
+            }
+
        return null
     }
 

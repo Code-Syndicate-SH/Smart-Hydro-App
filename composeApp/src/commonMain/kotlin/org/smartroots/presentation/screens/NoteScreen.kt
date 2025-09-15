@@ -25,21 +25,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kashif.cameraK.permissions.providePermissions
 import org.jetbrains.compose.resources.painterResource
+import org.smartroots.presentation.viewmodel.NotesViewModel
 import smartroots.composeapp.generated.resources.Res
 import smartroots.composeapp.generated.resources.ic_heading
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 @Composable
-fun NoteScreen(onViewNotes: () -> Unit) {
-    val permissions = providePermissions()
+fun NoteScreen(onAddNote: () -> Unit) {
 
-    val cameraPermissionState = remember { mutableStateOf(permissions.hasCameraPermission()) }
-// Request permissions if needed
-    if (!cameraPermissionState.value) {
-        permissions.RequestCameraPermission(
-            onGranted = { cameraPermissionState.value = true },
-            onDenied = { println("Camera Permission Denied") }
-        )
-    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -69,8 +63,7 @@ fun NoteScreen(onViewNotes: () -> Unit) {
             Button(
                 onClick = {
                     //  button click action
-
-
+                    onAddNote()
                 },
                 modifier = Modifier
                     .padding(10.dp)
@@ -107,7 +100,7 @@ fun NoteScreen(onViewNotes: () -> Unit) {
 
             Button(
                 onClick = {
-                    onViewNotes()
+                  // view all notes
                 },
                 modifier = Modifier
                     .padding(10.dp)

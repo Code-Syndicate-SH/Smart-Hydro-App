@@ -20,15 +20,20 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
+import org.smartroots.presentation.screens.AddNewNoteScreen
 import org.smartroots.presentation.screens.HomeScreen
 import org.smartroots.presentation.screens.NoteScreen
 import org.smartroots.presentation.screens.ScreenRoutes
 import org.smartroots.presentation.viewmodel.HomeViewModel
+import org.smartroots.presentation.viewmodel.NotesViewModel
+import kotlin.time.ExperimentalTime
 
 
+@OptIn(ExperimentalTime::class)
 @Composable
 fun App() {
     val homeViewModel = koinViewModel<HomeViewModel>()
+    val notesViewModel = koinViewModel<NotesViewModel>()
     val navController = rememberNavController()
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -65,8 +70,9 @@ fun App() {
             NavHost(navController, startDestination = ScreenRoutes.HomeScreen) {
                 composable<ScreenRoutes.HomeScreen> { HomeScreen(homeViewModel, onNotesClick = {navController.navigate(
                     ScreenRoutes.NotesScreen)}) }
-                composable <ScreenRoutes.NotesScreen>{ NoteScreen(onViewNotes = {navController.navigate(
-                    ScreenRoutes.AddNotesScreen)})}
+                composable <ScreenRoutes.NotesScreen>{ NoteScreen(onAddNote = {navController.navigate(
+                    ScreenRoutes.AddNotesScreen)} )}
+                composable<ScreenRoutes.AddNotesScreen> { AddNewNoteScreen(notesViewModel) }
             }
         }
     }
