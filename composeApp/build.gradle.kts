@@ -65,7 +65,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.room.runtime)
             implementation(libs.jetbrains.compose.navigation)
-
+            implementation("io.coil-kt.coil3:coil-gif:3.3.0")
             // koin dependancies
             implementation(libs.koin.core)
 

@@ -17,4 +17,6 @@ sealed class  ScreenRoutes {
 
     @Serializable
     object NotesScreen
+    @Serializable
+    object AddNotesScreen
 }

@@ -21,6 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import org.smartroots.presentation.screens.HomeScreen
+import org.smartroots.presentation.screens.NoteScreen
 import org.smartroots.presentation.screens.ScreenRoutes
 import org.smartroots.presentation.viewmodel.HomeViewModel
 
@@ -36,7 +37,7 @@ fun App() {
             SnackbarHost(hostState = snackbarHostState)
         },
         floatingActionButton = {
-            ExtendedFloatingActionButton(
+           /* ExtendedFloatingActionButton(
                content = {},
                 onClick = {
                     scope.launch {
@@ -57,12 +58,15 @@ fun App() {
                         }
                     }
                 }
-            )
+            )*/
         }
     ) { innerPadding ->
         Surface(modifier = Modifier.padding(innerPadding)) {
             NavHost(navController, startDestination = ScreenRoutes.HomeScreen) {
-                composable<ScreenRoutes.HomeScreen> { HomeScreen(homeViewModel) }
+                composable<ScreenRoutes.HomeScreen> { HomeScreen(homeViewModel, onNotesClick = {navController.navigate(
+                    ScreenRoutes.NotesScreen)}) }
+                composable <ScreenRoutes.NotesScreen>{ NoteScreen(onViewNotes = {navController.navigate(
+                    ScreenRoutes.AddNotesScreen)})}
             }
         }
     }
