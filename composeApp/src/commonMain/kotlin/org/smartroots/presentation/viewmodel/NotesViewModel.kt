@@ -64,8 +64,13 @@ class NotesViewModel(val noteRepository: NoteRepository) : ViewModel() {
             currentState.copy(isLoading = true)
         }
     }
-
+    fun resetErrors(){
+        _noteState.update { currentState ->
+            currentState.copy(errorMessage = "", titleError = "", descriptionError = "")
+        }
+    }
    suspend fun onSave(): Long {
+       resetErrors()
        loading()
        validateState()
        try {
