@@ -1,6 +1,7 @@
 package org.smartroots.data.utils
 
 import androidx.room.TypeConverter
+import coil3.Bitmap
 import kotlinx.datetime.LocalDate
 
 object Converters {
@@ -14,4 +15,8 @@ object Converters {
     fun dateToTimestamp(date: LocalDate?): String {
         return date.toString()
     }
+
+
+
+
 }

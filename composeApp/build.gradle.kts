@@ -82,7 +82,7 @@ kotlin {
             implementation(libs.coil.network.ktor)
             implementation(libs.konnection.lib)
             implementation(libs.sqlite.bundled)
-
+            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.0")
             // date time
             implementation(libs.date.time)
         }
