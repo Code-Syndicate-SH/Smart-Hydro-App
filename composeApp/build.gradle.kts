@@ -83,6 +83,7 @@ kotlin {
             implementation(libs.konnection.lib)
             implementation(libs.sqlite.bundled)
             implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.0")
+            implementation("io.github.ismoy:imagepickerkmp:1.0.24-beta")
             // date time
             implementation(libs.date.time)
         }
