@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,19 +21,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import coil3.compose.LocalPlatformContext
-import coil3.compose.rememberAsyncImagePainter
-import coil3.request.ImageRequest
 import org.jetbrains.compose.resources.painterResource
 import smartroots.composeapp.generated.resources.Res
-import smartroots.composeapp.generated.resources.buttonation
-import smartroots.composeapp.generated.resources.buttonview
-
-import  smartroots.composeapp.generated.resources.ic_heading
+import smartroots.composeapp.generated.resources.ic_heading
 
 @Composable
-fun NoteScreen(onViewNotes:()->Unit) {
+fun NoteScreen(onViewNotes: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -76,18 +68,18 @@ fun NoteScreen(onViewNotes:()->Unit) {
                 Box(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                 /*   val painter = rememberAsyncImagePainter(
-                        model = ImageRequest.Builder(LocalPlatformContext.current)
-                            .data(Res.drawable.buttonation)
-                            .decoderFactory(GifDecoder.Factory())
-                            .size(Size.ORIGINAL)
-                            .build()
-                    )
-                    Image(
-                        painter = painter,
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxSize()
-                    )*/
+                    /*   val painter = rememberAsyncImagePainter(
+                           model = ImageRequest.Builder(LocalPlatformContext.current)
+                               .data(Res.drawable.buttonation)
+                               .decoderFactory(GifDecoder.Factory())
+                               .size(Size.ORIGINAL)
+                               .build()
+                       )
+                       Image(
+                           painter = painter,
+                           contentDescription = null,
+                           modifier = Modifier.fillMaxSize()
+                       )*/
                     Text(
                         text = "New Entry",
                         fontSize = 40.sp,
@@ -113,18 +105,18 @@ fun NoteScreen(onViewNotes:()->Unit) {
                 Box(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                   /* val painter = rememberAsyncImagePainter(
-                        model = ImageRequest.Builder(LocalPlatformContext.current)
-                            .data(Res.drawable.buttonview)
-                            .decoderFactory(GifDecoder.Factory())
-                            .size(Size.ORIGINAL)
-                            .build()
-                    )*/
-                  /*  Image(
-                        painter = painter,
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxSize()
-                    )*/
+                    /* val painter = rememberAsyncImagePainter(
+                         model = ImageRequest.Builder(LocalPlatformContext.current)
+                             .data(Res.drawable.buttonview)
+                             .decoderFactory(GifDecoder.Factory())
+                             .size(Size.ORIGINAL)
+                             .build()
+                     )*/
+                    /*  Image(
+                          painter = painter,
+                          contentDescription = null,
+                          modifier = Modifier.fillMaxSize()
+                      )*/
                     Text(
                         text = "My Notes",
                         fontSize = 40.sp,
