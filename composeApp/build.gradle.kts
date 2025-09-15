@@ -1,9 +1,6 @@
-
-
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -16,6 +13,11 @@ plugins {
     alias(libs.plugins.room)
 }
 
+/* Ensure Koog and other libs resolve */
+repositories {
+    google()
+    mavenCentral()
+}
 
 kotlin {
     androidTarget {
@@ -42,15 +44,14 @@ kotlin {
 
     sourceSets {
         val desktopMain by getting
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.android)
-
         }
 
         nativeMain.dependencies {
-
             implementation(libs.ktor.client.darwin)
         }
 
@@ -61,58 +62,75 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+
             implementation(libs.room.runtime)
             implementation(libs.jetbrains.compose.navigation)
 
-            // koin dependancies
+            // Koin
             implementation(libs.koin.core)
-
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.koin.compose.viewmodel.navigation)
 
+            // Serialization + Ktor
             implementation(libs.kotlinx.serialization.json)
-
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
+
+            // Images / connectivity / sqlite
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
             implementation(libs.konnection.lib)
             implementation(libs.sqlite.bundled)
 
-            // date time
+            // Date/time
             implementation(libs.date.time)
+
+            implementation("ai.koog:koog-agents:0.4.1")
+
+            implementation("ai.koog:prompt-executor-model:0.4.1")
+
+            implementation("ai.koog:prompt-executor-llms-all:0.4.1")
+
+
+            implementation("ai.koog:prompt-executor-ollama-client:0.4.1")
+            implementation("ai.koog:prompt-executor-openrouter-client:0.4.1")
+            implementation("ai.koog:prompt-executor-openai-client:0.4.1")
+            implementation("ai.koog:prompt-llm:0.4.1")
+
+
+
+
         }
 
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
+
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
             implementation(libs.ktor.client.cio)
-
         }
     }
-
 }
 
-dependencies{
-
+dependencies {
     // KSP support for Room Compiler.
     add("kspAndroid", libs.room.compiler)
     add("kspIosSimulatorArm64", libs.room.compiler)
     add("kspIosX64", libs.room.compiler)
     add("kspIosArm64", libs.room.compiler)
-
 }
 
 room {
     schemaDirectory("$projectDir/schemas")
 }
+
 android {
     namespace = "org.smartroots"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
@@ -125,21 +143,25 @@ android {
         versionName = "1.0"
         multiDexEnabled = true
     }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
             excludes += "DebugProbesKt.bin"
         }
     }
+
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     lint {
         disable.add("NullSafeMutableLiveData")
         abortOnError = false
@@ -148,9 +170,7 @@ android {
 
 dependencies {
     debugImplementation(compose.uiTooling)
-
 }
-
 
 compose.desktop {
     application {
