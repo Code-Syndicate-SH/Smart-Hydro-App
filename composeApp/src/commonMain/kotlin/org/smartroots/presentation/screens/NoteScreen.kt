@@ -16,17 +16,30 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.kashif.cameraK.permissions.providePermissions
 import org.jetbrains.compose.resources.painterResource
 import smartroots.composeapp.generated.resources.Res
 import smartroots.composeapp.generated.resources.ic_heading
 
 @Composable
 fun NoteScreen(onViewNotes: () -> Unit) {
+    val permissions = providePermissions()
+
+    val cameraPermissionState = remember { mutableStateOf(permissions.hasCameraPermission()) }
+// Request permissions if needed
+    if (!cameraPermissionState.value) {
+        permissions.RequestCameraPermission(
+            onGranted = { cameraPermissionState.value = true },
+            onDenied = { println("Camera Permission Denied") }
+        )
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()

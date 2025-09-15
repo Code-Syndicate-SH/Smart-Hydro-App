@@ -13,6 +13,7 @@ import kotlinx.datetime.toLocalDateTime
 import org.koin.core.logger.MESSAGE
 import org.smartroots.data.database.entity.NoteEntity
 import org.smartroots.data.repository.dbRepository.NoteRepository
+import org.smartroots.domain.database.usecase.SaveNoteUseCase
 import org.smartroots.platformImageToBytes
 import org.smartroots.presentation.state.NoteState
 import kotlin.time.Clock
@@ -20,7 +21,7 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 @ExperimentalTime
-class NotesViewModel(val noteRepository: NoteRepository) : ViewModel() {
+class NotesViewModel(val saveNoteUseCase: SaveNoteUseCase ) : ViewModel() {
     private val _noteState = MutableStateFlow(NoteState())
     val noteState: StateFlow<NoteState> = _noteState.asStateFlow()
     val description = TextFieldState()
@@ -69,7 +70,7 @@ class NotesViewModel(val noteRepository: NoteRepository) : ViewModel() {
             currentState.copy(errorMessage = "", titleError = "", descriptionError = "")
         }
     }
-   suspend fun onSave(): Long {
+   suspend fun onSave(): NoteEntity? {
        resetErrors()
        loading()
        validateState()
@@ -87,14 +88,14 @@ class NotesViewModel(val noteRepository: NoteRepository) : ViewModel() {
                image = bytes,
                createdDate = datetimeInSystemZone.toString(),
            )
-           val long = noteRepository.upsert(noteEntity)
-           if(long>=0){
-               return long
+           val savedNote = saveNoteUseCase(noteEntity)
+           if(savedNote!=null){
+               return savedNote
            }
        }catch (e: Exception){
           updateErrorMessage("Problem saving the note, please try again")
        }
-       return -1
+       return null
     }
 
 

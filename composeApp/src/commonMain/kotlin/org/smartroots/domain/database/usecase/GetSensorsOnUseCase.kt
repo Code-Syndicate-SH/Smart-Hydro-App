@@ -3,7 +3,7 @@ package org.smartroots.domain.database.usecase
 import org.smartroots.data.database.entity.SensorActivityReading
 import org.smartroots.data.repository.dbRepository.SensorStatusRepository
 
-class GetActiveSensorsUseCase(
+class GetSensorsOnUseCase(
     val id: Int,
     private val sensorStatusRepository: SensorStatusRepository,
 ) {
