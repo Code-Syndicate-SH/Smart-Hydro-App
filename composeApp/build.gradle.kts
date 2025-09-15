@@ -46,12 +46,13 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.android)
-
+            implementation("io.github.ismoy:imagepickerkmp:1.0.24-beta")
         }
 
         nativeMain.dependencies {
 
             implementation(libs.ktor.client.darwin)
+            implementation("io.github.ismoy:imagepickerkmp:1.0.24-beta")
         }
 
         commonMain.dependencies {
@@ -83,7 +84,7 @@ kotlin {
             implementation(libs.konnection.lib)
             implementation(libs.sqlite.bundled)
             implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.0")
-            implementation("io.github.ismoy:imagepickerkmp:1.0.24-beta")
+
             // date time
             implementation(libs.date.time)
         }
