@@ -27,6 +27,8 @@ actual fun platformModule() = module {
     single<RoomDatabase.Builder<AppDatabase>> {
         getDatabaseBuilder()
     }
+    single { createHttpClient() }
+
 }
 
 actual fun createHttpClient(): HttpClient {

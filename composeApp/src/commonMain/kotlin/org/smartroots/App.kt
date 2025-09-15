@@ -1,52 +1,73 @@
 package org.smartroots
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
-import smartroots.composeapp.generated.resources.Res
-import smartroots.composeapp.generated.resources.compose_multiplatform
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinViewModel
+import org.smartroots.presentation.screens.HomeScreen
+import org.smartroots.presentation.screens.NoteScreen
+import org.smartroots.presentation.screens.ScreenRoutes
+import org.smartroots.presentation.viewmodel.HomeViewModel
+
 
 @Composable
-@Preview
 fun App() {
-
-    MaterialTheme {
-        var showContent by remember { mutableStateOf(false) }
-        Column(
-            modifier = Modifier
-                .safeContentPadding()
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
-            }
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
-                Column(
-                    Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
+    val homeViewModel = koinViewModel<HomeViewModel>()
+    val navController = rememberNavController()
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
+        floatingActionButton = {
+           /* ExtendedFloatingActionButton(
+               content = {},
+                onClick = {
+                    scope.launch {
+                        val result = snackbarHostState
+                            .showSnackbar(
+                                message = "${homeViewModel.homeUIState.value.networkError}",
+                                actionLabel = "Action",
+                                // Defaults to SnackbarDuration.Short
+                                duration = SnackbarDuration.Indefinite
+                            )
+                        when (result) {
+                            SnackbarResult.ActionPerformed -> {
+                                /* Handle snackbar action performed */
+                            }
+                            SnackbarResult.Dismissed -> {
+                                /* Handle snackbar dismissed */
+                            }
+                        }
+                    }
                 }
+            )*/
+        }
+    ) { innerPadding ->
+        Surface(modifier = Modifier.padding(innerPadding)) {
+            NavHost(navController, startDestination = ScreenRoutes.HomeScreen) {
+                composable<ScreenRoutes.HomeScreen> { HomeScreen(homeViewModel, onNotesClick = {navController.navigate(
+                    ScreenRoutes.NotesScreen)}) }
+                composable <ScreenRoutes.NotesScreen>{ NoteScreen(onViewNotes = {navController.navigate(
+                    ScreenRoutes.AddNotesScreen)})}
             }
         }
     }
 }
-

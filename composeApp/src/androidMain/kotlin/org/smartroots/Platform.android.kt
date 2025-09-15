@@ -7,12 +7,17 @@ import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import androidx.room.RoomDatabase
 
+import dev.tmapps.konnection.Konnection
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+
+import org.koin.android.ext.koin.androidContext
+
 import okio.ByteString.Companion.toByteString
+
 import org.koin.dsl.module
 import org.smartroots.data.database.AppDatabase
 import java.io.ByteArrayOutputStream
@@ -27,6 +32,8 @@ actual fun platformModule() = module {
     single<RoomDatabase.Builder<AppDatabase>> {
         getDatabaseBuilder(get())
     }
+
+    single { createHttpClient() }
 
 }
 
