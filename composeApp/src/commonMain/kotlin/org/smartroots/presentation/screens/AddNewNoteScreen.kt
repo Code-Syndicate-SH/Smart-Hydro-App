@@ -24,21 +24,27 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+
 import coil3.compose.rememberAsyncImagePainter
+import com.eygraber.uri.Uri
 import com.kashif.cameraK.permissions.providePermissions
 import org.jetbrains.compose.resources.painterResource
+import org.smartroots.platformImageToBytes
 import org.smartroots.presentation.viewmodel.NotesViewModel
 import smartroots.composeapp.generated.resources.Res
 import smartroots.composeapp.generated.resources.logo
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalTime::class)
+@OptIn(ExperimentalTime::class, ExperimentalEncodingApi::class)
 @Composable
-fun AddNewNoteScreen(notesViewModel: NotesViewModel) {
+fun AddNewNoteScreen(notesViewModel: NotesViewModel, onOpenCamera:()->Unit) {
     val uiState by notesViewModel.noteState.collectAsStateWithLifecycle()
     val permissions = providePermissions()
 
@@ -49,8 +55,9 @@ fun AddNewNoteScreen(notesViewModel: NotesViewModel) {
             onGranted = { cameraPermissionState.value = true },
             onDenied = { notesViewModel.updateErrorMessage("Camera Permission Denied") }
         )
-        notesViewModel.updateCameraPermission(cameraPermissionState.value)
+
     }
+    notesViewModel.updateCameraPermission(cameraPermissionState.value )
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -68,8 +75,11 @@ fun AddNewNoteScreen(notesViewModel: NotesViewModel) {
                 .background(Color(0xFF121212), RoundedCornerShape(10.dp))
         ) {
             if (uiState.image != null) {
+                val imageBytes = platformImageToBytes(uiState.image!!)
+                val base64 = Base64.encode(imageBytes, 0, imageBytes.size)
+                val dataUri = "data:image/jpeg;base64,$base64"
                 Image(
-                    painter = rememberAsyncImagePainter("imageUri"),
+                    painter = rememberAsyncImagePainter(Uri.parse(dataUri)),
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize()
                 )
@@ -79,6 +89,8 @@ fun AddNewNoteScreen(notesViewModel: NotesViewModel) {
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize()
                 )
+
+
             }
         }
 
@@ -110,7 +122,9 @@ fun AddNewNoteScreen(notesViewModel: NotesViewModel) {
 
             Button(
                 onClick = {
-                    // this will take you to the preview
+                 if(uiState.hasCameraPermission){
+                  onOpenCamera()// this will take you to the preview
+                 }
                 },
                 modifier = Modifier.weight(1f),
                 shape = RoundedCornerShape(5.dp),

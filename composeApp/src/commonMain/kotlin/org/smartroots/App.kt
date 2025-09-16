@@ -21,6 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import org.smartroots.presentation.screens.AddNewNoteScreen
+import org.smartroots.presentation.screens.CameraPreviewScreen
 import org.smartroots.presentation.screens.HomeScreen
 import org.smartroots.presentation.screens.NoteScreen
 import org.smartroots.presentation.screens.ScreenRoutes
@@ -72,7 +73,9 @@ fun App() {
                     ScreenRoutes.NotesScreen)}) }
                 composable <ScreenRoutes.NotesScreen>{ NoteScreen(onAddNote = {navController.navigate(
                     ScreenRoutes.AddNotesScreen)} )}
-                composable<ScreenRoutes.AddNotesScreen> { AddNewNoteScreen(notesViewModel) }
+                composable<ScreenRoutes.AddNotesScreen> { AddNewNoteScreen(notesViewModel, onOpenCamera = {navController.navigate(
+                    ScreenRoutes.CameraPreviewScreen)}) }
+                composable<ScreenRoutes.CameraPreviewScreen> { CameraPreviewScreen() }
             }
         }
     }
