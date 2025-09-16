@@ -4,6 +4,9 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil3.Bitmap
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,6 +21,7 @@ import org.smartroots.data.repository.dbRepository.NoteRepository
 import org.smartroots.domain.database.usecase.SaveNoteUseCase
 import org.smartroots.platformImageToBytes
 import org.smartroots.presentation.state.NoteState
+import kotlin.coroutines.coroutineContext
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
@@ -89,14 +93,15 @@ class NotesViewModel(val saveNoteUseCase: SaveNoteUseCase ) : ViewModel() {
                 val datetimeInSystemZone: LocalDateTime =
                     currentMoment.toLocalDateTime(TimeZone.currentSystemDefault())
                 datetimeInSystemZone.toString()
-                val bytes: ByteArray? = _noteState.value.image?.let { platformImageToBytes(it) }
-                val noteEntity = NoteEntity(
-                    title = title.text.toString(),
-                    description = description.text.toString(),
-                    image = bytes,
-                    createdDate = datetimeInSystemZone.toString(),
-                )
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
+                    val bytes: ByteArray? = _noteState.value.image?.let { platformImageToBytes(it) }
+                    val noteEntity = NoteEntity(
+                        title = title.text.toString(),
+                        description = description.text.toString(),
+                        image = bytes,
+                        createdDate = datetimeInSystemZone.toString(),
+                    )
+
                     savedNoteEntity = saveNoteUseCase(noteEntity)
                 }
                 if (savedNoteEntity != null) {

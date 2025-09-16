@@ -31,7 +31,7 @@ fun CameraPreviewScreen(){
         }
     )
     cameraController.value?.let { controller ->
-        CameraScreen(cameraController = controller)
+        CameraScreen(cameraController = controller, )
 
     }
 }

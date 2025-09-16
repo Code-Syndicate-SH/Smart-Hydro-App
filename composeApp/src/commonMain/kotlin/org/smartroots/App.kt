@@ -69,8 +69,10 @@ fun App() {
     ) { innerPadding ->
         Surface(modifier = Modifier.padding(innerPadding)) {
             NavHost(navController, startDestination = ScreenRoutes.HomeScreen) {
+
                 composable<ScreenRoutes.HomeScreen> { HomeScreen(homeViewModel, onNotesClick = {navController.navigate(
                     ScreenRoutes.NotesScreen)}) }
+
                 composable <ScreenRoutes.NotesScreen>{ NoteScreen(onAddNote = {navController.navigate(
                     ScreenRoutes.AddNotesScreen)} )}
                 composable<ScreenRoutes.AddNotesScreen> { AddNewNoteScreen(notesViewModel, onOpenCamera = {navController.navigate(
