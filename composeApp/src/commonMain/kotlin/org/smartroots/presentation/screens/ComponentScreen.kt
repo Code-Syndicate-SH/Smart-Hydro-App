@@ -144,9 +144,16 @@ fun ComponentScreen(
         }
     }
 }
+@OptIn(ExperimentalResourceApi::class)
 @Preview
 @Composable
-fun mypreviwq(){
+fun PreviewComponentScreen() {
     val navController = rememberNavController()
-    ComponentScreen(navController, "Water Level", "75%", Res.drawable.ic_water)
+
+    ComponentScreen(
+        navController = navController,
+        title = "Temperature",
+        value = "22°C",
+        iconRes = Res.drawable.ic_temperature
+    )
 }
