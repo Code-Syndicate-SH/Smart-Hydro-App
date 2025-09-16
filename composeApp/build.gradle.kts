@@ -82,8 +82,13 @@ kotlin {
             implementation(libs.coil.network.ktor)
             implementation(libs.konnection.lib)
             implementation(libs.sqlite.bundled)
+            // how to get the current time
             implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.0")
+            // camera for all platforms
+            implementation("io.github.kashif-mehmood-km:camerak:0.0.12")
 
+            // below is for uri parsing of images,
+            implementation ("com.eygraber:uri-kmp:0.0.20")
             // date time
             implementation(libs.date.time)
 

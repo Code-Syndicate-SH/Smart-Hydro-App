@@ -29,7 +29,15 @@ import org.smartroots.data.service.SensorAPI
 import org.smartroots.data.service.SensorAPIImpl
 import org.smartroots.domain.GetNetworkConnectionUseCase
 import org.smartroots.domain.GetSensorReadingsUseCase
+import org.smartroots.domain.database.usecase.GetAllNotes
+import org.smartroots.domain.database.usecase.GetAllSensorActivityUseCase
+
+import org.smartroots.domain.database.usecase.GetSensorsOnUseCase
+import org.smartroots.domain.database.usecase.SaveNoteUseCase
+import org.smartroots.domain.database.usecase.SaveSensorStatusUseCase
 import org.smartroots.presentation.viewmodel.HomeViewModel
+import org.smartroots.presentation.viewmodel.NotesViewModel
+import kotlin.time.ExperimentalTime
 
 
 expect fun platformModule(): Module
@@ -46,8 +54,11 @@ fun initKoin(config: KoinAppDeclaration? = null) =
             NetworkConnectionUseCaseModule,
             GetSensorReadingsUseCaseModule,
             homeViewModelModule,
+            notesViewModel,
             ktorClientModule,
-            SensorReadingModule
+            SensorReadingModule,
+            sensorUseCaseModule,
+            noteUseCaseModule
             // add my modules
         )
     }
@@ -83,7 +94,7 @@ val ktorClientModule = module {
 
 }
 val SensorReadingModule = module {
-    factory<SensorAPI> { (baseURL:String) ->
+    factory<SensorAPI> { (baseURL: String) ->
         SensorAPIImpl(
             baseURL = baseURL,
             tentClient = get(),
@@ -91,6 +102,7 @@ val SensorReadingModule = module {
             )
     }
 }
+
 // daos
 val dbDatabaseDao = module {
     factory { get<AppDatabase>().getBoxDao() }
@@ -106,8 +118,22 @@ val NetworkConnectionUseCaseModule = module {
 val GetSensorReadingsUseCaseModule = module {
     factoryOf(::GetSensorReadingsUseCase)
 }
+val sensorUseCaseModule = module {
+    factoryOf(::GetAllSensorActivityUseCase)
+    factoryOf(::GetSensorsOnUseCase)
+    factoryOf(::SaveSensorStatusUseCase)
+}
+val noteUseCaseModule = module {
+    factoryOf(::GetAllNotes)
+    factoryOf(::SaveNoteUseCase)
+}
 
 // viewModels
 val homeViewModelModule = module {
     viewModelOf(::HomeViewModel)
+}
+
+@OptIn(ExperimentalTime::class)
+val notesViewModel = module {
+    viewModelOf(::NotesViewModel)
 }

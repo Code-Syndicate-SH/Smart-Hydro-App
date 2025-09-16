@@ -108,10 +108,11 @@ fun HomeScreen(
             title =
                 "Notes Screen",
             iconRes = Res.drawable.ic_notes,
-            onClick ={ onNotesClick()}
+            onClick = { onNotesClick() }
         )
 
     }
+
 }
 
 @Composable
@@ -198,23 +199,8 @@ fun Header(title: String, languages: List<String>) {
 @Preview()
 @Composable
 fun PreviewHomeScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-    ) {
 
-        Text(
-            text = "Sensor Dashboard",
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-        SensorCard("Soil pH", Res.drawable.ic_soil_ph, "6.5 pH")
-        SensorCard("Electrical Conductivity", Res.drawable.ic_ec, "1400 µS/cm")
-        SensorCard("Water Level", Res.drawable.ic_water, "75 %")
-        SensorCard("Lights", Res.drawable.ic_lights, "50 %")
-        SensorCard("Humidity", Res.drawable.ic_humidity, "25 %")
-    }
+
 }
+
 

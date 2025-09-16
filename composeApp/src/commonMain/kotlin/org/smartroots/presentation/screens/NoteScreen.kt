@@ -16,17 +16,24 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.kashif.cameraK.permissions.providePermissions
 import org.jetbrains.compose.resources.painterResource
+import org.smartroots.presentation.viewmodel.NotesViewModel
 import smartroots.composeapp.generated.resources.Res
 import smartroots.composeapp.generated.resources.ic_heading
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 @Composable
-fun NoteScreen(onViewNotes: () -> Unit) {
+fun NoteScreen(onAddNote: () -> Unit) {
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -56,8 +63,7 @@ fun NoteScreen(onViewNotes: () -> Unit) {
             Button(
                 onClick = {
                     //  button click action
-
-
+                    onAddNote()
                 },
                 modifier = Modifier
                     .padding(10.dp)
@@ -94,7 +100,7 @@ fun NoteScreen(onViewNotes: () -> Unit) {
 
             Button(
                 onClick = {
-                    onViewNotes()
+                  // view all notes
                 },
                 modifier = Modifier
                     .padding(10.dp)
