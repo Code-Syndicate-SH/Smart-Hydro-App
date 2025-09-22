@@ -46,12 +46,13 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.android)
-
+            implementation("io.github.ismoy:imagepickerkmp:1.0.24-beta")
         }
 
         nativeMain.dependencies {
 
             implementation(libs.ktor.client.darwin)
+            implementation("io.github.ismoy:imagepickerkmp:1.0.24-beta")
         }
 
         commonMain.dependencies {
@@ -65,7 +66,6 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.room.runtime)
             implementation(libs.jetbrains.compose.navigation)
-
             // koin dependancies
             implementation(libs.koin.core)
 
@@ -82,13 +82,27 @@ kotlin {
             implementation(libs.coil.network.ktor)
             implementation(libs.konnection.lib)
             implementation(libs.sqlite.bundled)
+            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.0")
 
             // date time
             implementation(libs.date.time)
+
+
         }
 
         commonTest.dependencies {
-            implementation(libs.kotlin.test)
+
+            implementation(kotlin("test"))
+            implementation("io.ktor:ktor-client-mock:3.1.3")
+            implementation("io.ktor:ktor-client-content-negotiation:3.1.3")
+            implementation("io.ktor:ktor-serialization-kotlinx-json:3.1.3")
+          
+
+            implementation("io.insert-koin:koin-test:3.5.6")
+         
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
+
+
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -151,7 +165,11 @@ dependencies {
 
 }
 
-
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
 compose.desktop {
     application {
         mainClass = "org.smartroots.MainKt"

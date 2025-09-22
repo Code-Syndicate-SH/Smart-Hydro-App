@@ -14,7 +14,7 @@ class GetSensorReadingsUseCase(private val getNetworkConnectionUseCase: GetNetwo
         try {
             networkUrl = getNetworkConnectionUseCase()
         } catch (e: NullPointerException) {
-            throw NullPointerException("System is not connected to a network.")
+            throw e
         }
         val sensorRepository: SensorRepository =
             getKoin().get<SensorRepository> { parameterSetOf(networkUrl?.url) }
@@ -25,6 +25,7 @@ class GetSensorReadingsUseCase(private val getNetworkConnectionUseCase: GetNetwo
     }
 
     private fun validateSensorReading(sensor: Sensor): Map<String, Double> {
+
         val mappedSensorReadings = sensor.toMap()
         val validSensorReadings: MutableMap<String, Double> = mutableMapOf()
         var nullReadings = 0

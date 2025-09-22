@@ -8,5 +8,5 @@ import dev.tmapps.konnection.NetworkConnection
  */
 data class NetworkConfigState(
     val currentConnectionStatus: NetworkConnection? = NetworkConnection.UNKNOWN_CONNECTION_TYPE,
-    val konnection: Konnection = Konnection.instance
+    val konnection: Konnection?
 )
